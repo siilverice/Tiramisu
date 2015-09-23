@@ -1,0 +1,13 @@
+---
+
+- name: test ansible
+  shell: touch done
+
+- name: Install Python-ceph
+  yum: name=python-ceph state=present
+
+- name: Delete old repo
+  shell: rm -rf Tiramisu
+
+- name: Clone ceph source code
+  shell: git clone https://github.com/Nyan-Cats/Tiramisu.git --branch develop

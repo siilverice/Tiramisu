@@ -1,0 +1,6 @@
+---
+- hosts: hp1
+
+  roles:
+    - { role: mds }
+    - { role: cephfs }

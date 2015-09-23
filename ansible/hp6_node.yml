@@ -1,0 +1,5 @@
+---
+- hosts: hp6
+
+  roles:
+    - { role: mon }

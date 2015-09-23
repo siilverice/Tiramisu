@@ -1,0 +1,6 @@
+---
+- hosts: hp7
+
+  roles:
+    - { role: osd }
+    - { role: mon }

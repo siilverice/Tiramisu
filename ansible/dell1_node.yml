@@ -1,0 +1,6 @@
+---
+- hosts: dell1
+
+  roles:
+    - { role: osd }
+    - { role: mon }
