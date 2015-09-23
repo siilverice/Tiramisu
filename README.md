@@ -1,3 +1,8 @@
+# Tiramisu
+
+
+Different applications have various requirements in terms of data usage and characteristics. In order to provide the acceptable level of application service quality, developers need to understand and appropriately select the underlying data storage technology for such requirements. As a result, developers may need to spend a significant amount of time learning unfamiliar storage technology. This project aims to develop Tiramisu, a software-defined data platform, which can automatically translate the application requirements to the data storage requirements using a data model. This data model introduces an abstraction layer which can map various application requirements to different storage characteristics. Tiramisu then provisions the datastore according to the translated storage characteristics. 
+
 ============================================
 Ceph - a scalable distributed storage system
 ============================================
@@ -105,4 +110,3 @@ To build the documentation, ensure that you are in the top-level
 
 	admin/build-doc
 
-# Tiramisu
