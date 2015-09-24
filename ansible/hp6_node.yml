@@ -1,5 +1,7 @@
 ---
 - hosts: hp6
 
+  remote_user: ceph
+
   roles:
     - { role: mon }

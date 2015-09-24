@@ -29,7 +29,7 @@
     removes: Tiramisu/this_is_dev_branch
 
 - name: Clone ceph source code
-  shell: git clone --recursive https://github.com/Nyan-Cats/Tiramisu.git --branch develop
+  shell: git clone --recursive https://github.com/SOUP-CE-KMITL/Tiramisu.git --branch develop
 
 - name: Change own for repo
   shell: sudo chown -R ceph Tiramisu
@@ -46,14 +46,12 @@
     - python-argparse
     - python-ceph
     - gperftools-libs
+    - autoconf-archive
 
 - name: Install dependencies
   shell: ./install-deps.sh
   args:
     chdir: Tiramisu
-
-- name: Install autoconf-archive
-  yum: name=autoconf-archive state=present
 
 - name: Build autogen
   shell: ./autogen.sh
@@ -91,7 +89,8 @@
 
 - name: Copy ceph.conf
   template: src=ceph.conf.j2 dest=/etc/ceph/ceph.conf
-
+#  shell: sudo cp Tiramisu/tira_conf/ceph.conf /etc/ceph/
+         
 - name: Create a keyring for your cluster and generate a monitor secret key.
   shell: ceph-authtool --create-keyring /tmp/ceph.mon.keyring --gen-key -n mon. --cap mon 'allow *'
 
