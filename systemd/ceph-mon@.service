@@ -14,7 +14,7 @@ PartOf=ceph.target
 [Service]
 EnvironmentFile=-/etc/sysconfig/ceph
 Environment=CLUSTER=ceph
-ExecStart=/usr/bin/ceph-mon -f --cluster ${CLUSTER} --id %i
+ExecStart=/usr/local/bin/ceph-mon -f --cluster ${CLUSTER} --id %i
 
 [Install]
 WantedBy=ceph.target
