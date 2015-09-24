@@ -4,6 +4,13 @@
 [hp6]
 10.0.1.6
 
+[hp6:vars]
+fsid=a0cb9dec-7772-4ae2-a980-b69b42ef22ee
+mon_members=hp6
+host=hp6
+host_addr=10.0.1.6
+host_mds=hp1
+
 [hp7]
 10.0.1.7
 
@@ -12,3 +19,10 @@
 
 [test]
 10.0.1.2
+
+[test:vars]
+fsid=8ab9c1c5-a42c-45f7-9767-07aeefbbad0e
+mon_members=hp2
+host=hp2
+host_addr=10.0.1.2
+host_mds=hp1
