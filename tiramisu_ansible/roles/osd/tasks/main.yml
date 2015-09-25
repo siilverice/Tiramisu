@@ -8,20 +8,32 @@
   args:
     removes: /var/run/ceph
 
-- name: Clear /var/lib/ceph/mon
-  shell: sudo rm -r /var/lib/ceph/mon
+- name: Clear /var/lib/ceph/osd
+  shell: sudo rm -r /var/lib/ceph/osd
   args:
-    removes: /var/lib/ceph/mon
+    removes: /var/lib/ceph/osd
 
-- name: Clear tmp
-  shell: sudo rm /tmp/monmap
+- name: Delete config directory
+  shell: sudo rm -r /etc/ceph/
   args:
-    removes: /tmp/monmap
+    removes: /etc/ceph/
 
-- name: Clear mon keyring
-  shell: sudo rm /tmp/ceph.mon.keyring
+- name: Create dir /etc/ceph/
+  shell: sudo mkdir /etc/ceph/
+
+- name: Change own to ceph /etc/ceph/
+  shell: sudo chown -R ceph /etc/ceph/
+
+- name: Change group to ceph /etc/ceph/
+  shell: sudo chgrp -R ceph /etc/ceph/
+
+- name: Clear keyring
+  shell: sudo rm /etc/ceph/ceph.client.admin.keyring
   args:
-    removes: /tmp/ceph.mon.keyring
+    removes: /etc/ceph/ceph.client.admin.keyring
+
+- name: Copy keyring file from mon node
+  shell: sudo cp ceph.client.admin.keyring /etc/ceph/
 
 - name: Delete old repo
   shell: sudo rm -rf Tiramisu
@@ -38,7 +50,7 @@
   shell: sudo chgrp -R ceph Tiramisu
 
 - name: Install 3rd dependencies
-  yum: name={{ item }} state=present
+  shell: sudo yum -y install {{ item }}
   with_items:
     - snappy
     - leveldb
@@ -73,48 +85,15 @@
   args:
     chdir: Tiramisu
 
-- name: Delete config folder
-  shell: sudo rm -r /etc/ceph/
-  args:
-    removes: /etc/ceph/ceph.conf
-
-- name: Create dir /etc/ceph/
-  shell: sudo mkdir /etc/ceph/
+- name: Copy ceph.conf
+  template: src=ceph_1_mon.conf.j2 dest=/etc/ceph/ceph.conf
 
 - name: Change own to ceph /etc/ceph/
   shell: sudo chown -R ceph /etc/ceph/
 
 - name: Change group to ceph /etc/ceph/
   shell: sudo chgrp -R ceph /etc/ceph/
-
-- name: Copy ceph.conf
-  template: src=ceph.conf.j2 dest=/etc/ceph/ceph.conf
-#  shell: sudo cp Tiramisu/tira_conf/ceph.conf /etc/ceph/
          
-- name: Create a keyring for your cluster and generate a monitor secret key.
-  shell: ceph-authtool --create-keyring /tmp/ceph.mon.keyring --gen-key -n mon. --cap mon 'allow *'
-
-- name: Create a keyring for your cluster and generate a mds secret key.
-  shell: ceph-authtool /tmp/ceph.mon.keyring --gen-key \
-           -n mds.{{ host_mds }} \
-           --cap mds 'allow *' \
-           --cap osd 'allow *' \
-           --cap mon 'allow rwx'
-
-- name: Remove old admin key
-  shell: sudo rm /etc/ceph/ceph.client.admin.keyring
-  args:
-    removes: /etc/ceph/ceph.client.admin.keyring
-
-- name: Generate an administrator keyring, generate a client.admin user and add the user to the keyring.
-  shell: ceph-authtool --create-keyring /etc/ceph/ceph.client.admin.keyring --gen-key -n client.admin --set-uid=0 --cap mon 'allow *' --cap osd 'allow *' --cap mds 'allow'
-
-- name: Add the client.admin key to the ceph.mon.keyring.
-  shell: ceph-authtool /tmp/ceph.mon.keyring --import-keyring /etc/ceph/ceph.client.admin.keyring
-
-- name: Generate a monitor map using the hostname(s), host IP address(es) and the FSID. Save it as /tmp/monmap
-  shell: monmaptool --create --add {{ host }} {{ host_addr }} --fsid {{ fsid }}  /tmp/monmap
-
 - name: Copy python-ceph local lib to lib
   shell: sudo cp /usr/local/lib/python2.7/site-packages/ceph* /usr/lib/python2.7/site-packages/
   
@@ -124,17 +103,33 @@
 - name: Copy python-ceph local lib to lib
   shell: sudo cp /usr/local/lib/python2.7/site-packages/rbd* /usr/lib/python2.7/site-packages/
 
-- name: Create directory mon ceph-node
-  shell: sudo mkdir -p /var/lib/ceph/mon/ceph-{{ host }}
+- name: Create the OSD
+  shell: ceph osd create
 
-- name: Populate the monitor daemon(s) with the monitor map and keyring.
-  shell: sudo /usr/local/bin/ceph-mon --mkfs -i {{ host }} --monmap /tmp/monmap --keyring /tmp/ceph.mon.keyring
+- name: Create directory mon ceph-node
+  shell: sudo mkdir -p /var/lib/ceph/osd/ceph-{{ id }}
 
 - name: Change permission lib ceph
-  shell: sudo chmod -R 777 /var/lib/ceph/mon/ceph-{{ host }}/
+  shell: sudo chmod -R 777 /var/lib/ceph/osd/ceph-{{ id }}/
 
-- name: Create directory var run ceph
-  shell: sudo mkdir /var/run/ceph/
+- name: Initialize the OSD data directory
+  shell: sudo /usr/local/bin/ceph-osd -i {{ id }} --mkfs --mkkey
+
+- name: Clear auth key
+  shell: ceph auth del osd.0
+  ignore_errors: yes
+
+- name: Register the OSD authentication key
+  shell: sudo /usr/local/bin/ceph auth add osd.{{ id }} osd 'allow *' mon 'allow profile osd' -i /var/lib/ceph/osd/ceph-{{ id }}/keyring
+
+- name: Add Ceph Node to the CRUSH map.
+  shell: ceph osd crush add-bucket {{ host }} host
+
+- name: Place the Ceph Node under the root default.
+  shell: ceph osd crush move {{ host }} root=default
+
+- name: Decompile the CRUSH map
+  shell: ceph osd crush add osd.{{ id }} 1.0 host={{ host }}
 
 - name: Change permission run ceph
   shell: sudo chmod -R 777 /var/run/ceph/
@@ -143,4 +138,4 @@
   shell: sudo systemctl daemon-reload
 
 - name: Start mon service
-  shell: sudo systemctl restart ceph-mon@{{ host }}
+  shell: sudo systemctl restart ceph-osd@{{ id }}
