@@ -23,7 +23,7 @@ if [ "${update:-1}" = "1" -o "${update:-1}" = "true" ]; then
     # update location in crush
     hook="$(ceph-conf --cluster=${cluster:-ceph} --name=osd.$id --lookup osd_crush_location_hook || :)"
     if [ -z "$hook" ]; then
-        hook="/usr/bin/ceph-crush-location"
+        hook="/usr/local/bin/ceph-crush-location"
     fi
     location="$($hook --cluster ${cluster:-ceph} --id $id --type osd)"
     weight="$(ceph-conf --cluster=${cluster:-ceph} --name=osd.$id --lookup osd_crush_initial_weight || :)"
