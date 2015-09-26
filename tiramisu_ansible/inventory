@@ -29,13 +29,14 @@ addr_mds=10.0.1.1
 [dell1]
 10.0.1.8
 
-[hp8:vars]
+[dell1:vars]
 fsid=a0cb9dec-7772-4ae2-a980-b69b42ef22ee
+id=1
 host_mon=hp6
 addr_mon=10.0.1.6
 addr_osd_0=10.0.1.7
 addr_osd_1=10.0.1.8
-host=hp8
+host=dell1
 host_addr=10.0.1.8
 host_mds=hp1
 addr_mds=10.0.1.1

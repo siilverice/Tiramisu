@@ -43,6 +43,9 @@
 - name: Clone ceph source code
   shell: git clone --recursive https://github.com/SOUP-CE-KMITL/Tiramisu.git --branch develop
 
+- name: Copy service file
+  shell: sudo cp Tiramisu/systemd/* /usr/lib/systemd/system/
+
 - name: Change own for repo
   shell: sudo chown -R ceph Tiramisu
 
@@ -103,6 +106,22 @@
 - name: Copy python-ceph local lib to lib
   shell: sudo cp /usr/local/lib/python2.7/site-packages/rbd* /usr/lib/python2.7/site-packages/
 
+- name: Stop old osd
+  shell: sudo systemctl stop ceph-osd@{{ id }}
+  ignore_errors: yes
+
+- name: Remove the old osd from the CRUSH map
+  shell: ceph osd crush remove osd.{{ id }}
+  ignore_errors: yes
+
+- name: Clear auth key
+  shell: ceph auth del osd.{{ id }}
+  ignore_errors: yes
+
+- name: Remove the OSD.
+  shell: ceph osd rm {{ id }}
+  ignore_errors: yes
+
 - name: Create the OSD
   shell: ceph osd create
 
@@ -114,10 +133,6 @@
 
 - name: Initialize the OSD data directory
   shell: sudo /usr/local/bin/ceph-osd -i {{ id }} --mkfs --mkkey
-
-- name: Clear auth key
-  shell: ceph auth del osd.0
-  ignore_errors: yes
 
 - name: Register the OSD authentication key
   shell: sudo /usr/local/bin/ceph auth add osd.{{ id }} osd 'allow *' mon 'allow profile osd' -i /var/lib/ceph/osd/ceph-{{ id }}/keyring
