@@ -22,7 +22,7 @@ osd host = {{ addr_osd_0 }}
 [osd.1]
 osd host = {{ addr_osd_1 }}
 
-[mds.{{ host_mds }}]
+[mds.0]
 host = {{ host_mds }}
 mds addr = {{ addr_mds }}:6789
-mds data = /var/lib/ceph/mds/mds.{{ host_mds }}
+mds data = /var/lib/ceph/mds/mds.0

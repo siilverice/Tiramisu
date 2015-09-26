@@ -1,6 +1,17 @@
 [hp1]
 10.0.1.1
 
+[hp1:vars]
+fsid=a0cb9dec-7772-4ae2-a980-b69b42ef22ee
+id=0
+host_mon=hp6
+addr_mon=10.0.1.6
+addr_osd_0=10.0.1.7
+addr_osd_1=10.0.1.8
+host_mds=hp1
+addr_mds=10.0.1.1
+
+
 [hp6]
 10.0.1.6
 

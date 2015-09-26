@@ -3,4 +3,3 @@
 
   roles:
     - { role: mds }
-    - { role: cephfs }
