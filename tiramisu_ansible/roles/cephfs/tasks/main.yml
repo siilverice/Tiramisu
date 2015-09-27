@@ -1,10 +1,4 @@
-- name: Delete old cephfs_data pool
-  shell: ceph osd pool delete cephfs_data cephfs_data --yes-i-really-really-mean-it
-  ignore_errors: yes
-
-- name: Delete old cephfs_metadata pool
-  shell: ceph osd pool delete cephfs_metadata cephfs_metadata --yes-i-really-really-mean-it
-  ignore_errors: yes
+---
 
 - name: Create old cephfs_data pool 
   shell: ceph osd pool create cephfs_data 64

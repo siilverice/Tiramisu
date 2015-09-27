@@ -3,6 +3,26 @@
 - name: Test ansible
   shell: sudo touch test_ansible
 
+- name: Stop old mds
+  shell: sudo systemctl stop ceph-mds@{{ id }}
+  ignore_errors: yes
+
+- name: Delete old cephfs_data pool
+  shell: ceph osd pool delete cephfs_data cephfs_data --yes-i-really-really-mean-it
+  ignore_errors: yes
+
+- name: Delete old cephfs_metadata pool
+  shell: ceph osd pool delete cephfs_metadata cephfs_metadata --yes-i-really-really-mean-it
+  ignore_errors: yes
+
+- name: Romove old file system
+  shell: ceph fs rm ceph_fs
+  ignore_errors: yes
+
+- name: Remove old mds
+  shell: ceph mds rm mds.{{ id }}
+  ignore_errors: yes
+
 - name: Clear /var/run/ceph
   shell: sudo rm -r /var/run/ceph
   args:
@@ -35,13 +55,13 @@
 - name: Copy keyring file from mon node
   shell: sudo cp ceph.client.admin.keyring /etc/ceph/
 
-- name: Delete old repo
-  shell: sudo rm -rf Tiramisu
-  args:
-    removes: Tiramisu/this_is_dev_branch
+#- name: Delete old repo
+#  shell: sudo rm -rf Tiramisu
+#  args:
+#    removes: Tiramisu/this_is_dev_branch
 
-- name: Clone ceph source code
-  shell: git clone --recursive https://github.com/SOUP-CE-KMITL/Tiramisu.git --branch develop
+#- name: Clone ceph source code
+#  shell: git clone --recursive https://github.com/SOUP-CE-KMITL/Tiramisu.git --branch develop
 
 - name: Copy service file
   shell: sudo cp Tiramisu/systemd/* /usr/lib/systemd/system/
@@ -52,41 +72,41 @@
 - name: Change group for repo
   shell: sudo chgrp -R ceph Tiramisu
 
-- name: Install 3rd dependencies
-  shell: sudo yum -y install {{ item }}
-  with_items:
-    - snappy
-    - leveldb
-    - gdisk
-    - python-argparse
-    - python-ceph
-    - gperftools-libs
-    - autoconf-archive
+#- name: Install 3rd dependencies
+#  shell: sudo yum -y install {{ item }}
+#  with_items:
+#    - snappy
+#    - leveldb
+#    - gdisk
+#    - python-argparse
+#    - python-ceph
+#    - gperftools-libs
+#    - autoconf-archive
 
-- name: Install dependencies
-  shell: ./install-deps.sh
-  args:
-    chdir: Tiramisu
+#- name: Install dependencies
+#  shell: ./install-deps.sh
+#  args:
+#    chdir: Tiramisu
 
-- name: Build autogen
-  shell: ./autogen.sh
-  args:
-    chdir: Tiramisu/ 
+#- name: Build autogen
+#  shell: ./autogen.sh
+#  args:
+#    chdir: Tiramisu/ 
 
-- name: Build config
-  shell: ./configure 
-  args:
-    chdir: Tiramisu
+#- name: Build config
+#  shell: ./configure 
+#  args:
+#    chdir: Tiramisu
 
-- name: Build make
-  shell: sudo make -j4
-  args:
-    chdir: Tiramisu
+#- name: Build make
+#  shell: sudo make -j4
+#  args:
+#    chdir: Tiramisu
 
-- name: Install ceph
-  shell: sudo make install
-  args:
-    chdir: Tiramisu
+#- name: Install ceph
+#  shell: sudo make install
+#  args:
+#    chdir: Tiramisu
 
 - name: Copy ceph.conf
   template: src=ceph_1_mon.conf.j2 dest=/etc/ceph/ceph.conf
@@ -105,25 +125,6 @@
 
 - name: Copy python-ceph local lib to lib
   shell: sudo cp /usr/local/lib/python2.7/site-packages/rbd* /usr/lib/python2.7/site-packages/
-
-- name: Stop old mds
-  shell: sudo systemctl stop ceph-mds@{{ id }}
-  ignore_errors: yes
-
-- name: Delete old cephfs_data pool
-  shell: ceph osd pool delete cephfs_data cephfs_data --yes-i-really-really-mean-it
-  ignore_errors: yes
-
-- name: Delete old cephfs_metadata pool
-  shell: ceph osd pool delete cephfs_metadata cephfs_metadata --yes-i-really-really-mean-it
-  ignore_errors: yes
-
-- name: Romove old file system
-  shell: ceph fs rm ceph_fs
-
-- name: Remove old mds
-  shell: ceph mds rm mds.{{ id }}
-  ignore_errors: yes
 
 - name: Create directory mds ceph-node
   shell: sudo mkdir -p /var/lib/ceph/mds/mds.{{ id }}

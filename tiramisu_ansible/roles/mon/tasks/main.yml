@@ -3,6 +3,9 @@
 - name: Test ansible
   shell: sudo touch test_ansible
 
+#- name: Remove old mon
+#  shell: ceph mon remove hp6
+
 - name: Clear /var/run/ceph
   shell: sudo rm -r /var/run/ceph
   args:
@@ -12,6 +15,11 @@
   shell: sudo rm -r /var/lib/ceph/mon
   args:
     removes: /var/lib/ceph/mon
+
+- name: Clear config folder
+  shell: sudo rm -r /etc/ceph/
+  args:
+    removes: /etc/ceph
 
 - name: Clear tmp
   shell: sudo rm /tmp/monmap
@@ -23,55 +31,55 @@
   args:
     removes: /tmp/ceph.mon.keyring
 
-- name: Delete old repo
-  shell: sudo rm -rf Tiramisu
-  args:
-    removes: Tiramisu/this_is_dev_branch
+#- name: Delete old repo
+#  shell: sudo rm -rf Tiramisu
+#  args:
+#    removes: Tiramisu/this_is_dev_branch
 
-- name: Clone ceph source code
-  shell: git clone --recursive https://github.com/SOUP-CE-KMITL/Tiramisu.git --branch develop
+#- name: Clone ceph source code
+#  shell: git clone --recursive https://github.com/SOUP-CE-KMITL/Tiramisu.git --branch develop
 
-- name: Change own for repo
-  shell: sudo chown -R ceph Tiramisu
+#- name: Change own for repo
+#  shell: sudo chown -R ceph Tiramisu
 
-- name: Change group for repo
-  shell: sudo chgrp -R ceph Tiramisu
+#- name: Change group for repo
+#  shell: sudo chgrp -R ceph Tiramisu
 
-- name: Install 3rd dependencies
-  shell: sudo yum install {{ item }}
-  with_items:
-    - snappy
-    - leveldb
-    - gdisk
-    - python-argparse
-    - python-ceph
-    - gperftools-libs
-    - autoconf-archive
+#- name: Install 3rd dependencies
+#  shell: sudo yum install {{ item }}
+#  with_items:
+#    - snappy
+#    - leveldb
+#    - gdisk
+#    - python-argparse
+#    - python-ceph
+#    - gperftools-libs
+#    - autoconf-archive
 
-- name: Install dependencies
-  shell: ./install-deps.sh
-  args:
-    chdir: Tiramisu
+#- name: Install dependencies
+#  shell: ./install-deps.sh
+#  args:
+#    chdir: Tiramisu
 
-- name: Build autogen
-  shell: ./autogen.sh
-  args:
-    chdir: Tiramisu/ 
+#- name: Build autogen
+#  shell: ./autogen.sh
+#  args:
+#    chdir: Tiramisu/ 
 
-- name: Build config
-  shell: ./configure 
-  args:
-    chdir: Tiramisu
+#- name: Build config
+#  shell: ./configure 
+#  args:
+#    chdir: Tiramisu
 
-- name: Build make
-  shell: sudo make -j4
-  args:
-    chdir: Tiramisu
+#- name: Build make
+#  shell: sudo make -j4
+#  args:
+#    chdir: Tiramisu
 
-- name: Install ceph
-  shell: sudo make install
-  args:
-    chdir: Tiramisu
+#- name: Install ceph
+#  shell: sudo make install
+#  args:
+#    chdir: Tiramisu
 
 - name: Delete config folder
   shell: sudo rm -r /etc/ceph/
@@ -88,15 +96,14 @@
   shell: sudo chgrp -R ceph /etc/ceph/
 
 - name: Copy ceph.conf
-  template: src=ceph.conf.j2 dest=/etc/ceph/ceph.conf
-#  shell: sudo cp Tiramisu/tira_conf/ceph.conf /etc/ceph/
+  template: src=ceph_1_mon.conf.j2 dest=/etc/ceph/ceph.conf
          
 - name: Create a keyring for your cluster and generate a monitor secret key.
   shell: ceph-authtool --create-keyring /tmp/ceph.mon.keyring --gen-key -n mon. --cap mon 'allow *'
 
 - name: Create a keyring for your cluster and generate a mds secret key.
   shell: ceph-authtool /tmp/ceph.mon.keyring --gen-key \
-           -n mds.{{ host_mds }} \
+           -n mds.0 \
            --cap mds 'allow *' \
            --cap osd 'allow *' \
            --cap mon 'allow rwx'
