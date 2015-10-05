@@ -6,12 +6,15 @@
 sudo yum install systemtap systemtap-runtime
 ```
 
+Install kernel-debuginfo-common
 ```
 wget http://debuginfo.centos.org/7/x86_64/kernel-debuginfo-common-x86_64-`uname -r`.rpm
 ```
 ```
 sudo rpm -ihv kernel-debuginfo-common-x86_64-`uname -r`.rpm
 ```
+
+Install kernel-debuginfo-
 ```
 wget http://debuginfo.centos.org/7/x86_64/kernel-debuginfo-`uname -r`.rpm
 ```
