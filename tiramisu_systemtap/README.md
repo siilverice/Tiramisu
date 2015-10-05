@@ -6,21 +6,24 @@
 sudo yum install systemtap systemtap-runtime
 ```
 
-Get kernel version
+```
+wget http://debuginfo.centos.org/7/x86_64/kernel-debuginfo-common-x86_64-`uname -r`.rpm
+```
+```
+sudo rpm -ihv kernel-debuginfo-common-x86_64-`uname -r`.rpm
+```
+```
+wget http://debuginfo.centos.org/7/x86_64/kernel-debuginfo-`uname -r`.rpm
+```
+```
+sudo rpm -ihv kernel-debuginfo-`uname -r`.rpm
+```
 
-```
-uname -r
-``` 
-
-```
-wget http://debuginfo.centos.org/7/x86_64/kernel-debuginfo-(kernel_version).rpm
-```
-```
-sudo rpm -ihv kernel-debuginfo-(kernel_version).rpm
-```
+Optional
 ```
 sudo yum install kernel-devel-(kernel_version)
 ```
+
 ```
 stap-prep
 ```
