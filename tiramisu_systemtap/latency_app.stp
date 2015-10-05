@@ -1,0 +1,13 @@
+#!/usr/bin/env stap
+
+global list
+
+probe process("/lib*/libc.so.*").function("open") {
+        list[pid(), ppid()] = gettimeofday_us()
+}
+
+probe process("/lib*/libc.so.*").function("open").return {
+        if([pid(),ppid()] in list)
+                printf("%s, PID %d, PPID %d, %s,  Latency  %d sec\n", ctime(gettimeofday_s()) ,  pid(), ppid(), execname(), gettimeofday_us()-list[pid(),ppid()])
+}
+
