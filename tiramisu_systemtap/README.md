@@ -22,14 +22,16 @@ wget http://debuginfo.centos.org/7/x86_64/kernel-debuginfo-`uname -r`.rpm
 sudo rpm -ihv kernel-debuginfo-`uname -r`.rpm
 ```
 
+```
+stap-prep
+```
+
 Optional
 ```
 sudo yum install kernel-devel-(kernel_version)
 ```
 
-```
-stap-prep
-```
+
 
 
 ### Run script
