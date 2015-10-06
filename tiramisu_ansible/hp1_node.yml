@@ -1,5 +1,5 @@
 ---
-- hosts: hp1
+- hosts: hp2
 
   roles:
      - { role: mds }
