@@ -1,15 +1,15 @@
-[hp1]
-10.0.1.1
+[hp2]
+10.0.1.2
 
-[hp1:vars]
+[hp2:vars]
 fsid=a0cb9dec-7772-4ae2-a980-b69b42ef22ee
 id=0
 host_mon=hp6
 addr_mon=10.0.1.6
 addr_osd_0=10.0.1.7
 addr_osd_1=10.0.1.8
-host_mds=hp1
-addr_mds=10.0.1.1
+host_mds=hp2
+addr_mds=10.0.1.2
 
 
 [hp6]
@@ -23,8 +23,8 @@ addr_osd_0=10.0.1.7
 addr_osd_1=10.0.1.8
 host=hp6
 host_addr=10.0.1.6
-host_mds=hp1
-addr_mds=10.0.1.1
+host_mds=hp2
+addr_mds=10.0.1.2
 
 [hp7]
 10.0.1.7
@@ -38,8 +38,8 @@ addr_osd_0=10.0.1.7
 addr_osd_1=10.0.1.8
 host=hp7
 host_addr=10.0.1.7
-host_mds=hp1
-addr_mds=10.0.1.1
+host_mds=hp2
+addr_mds=10.0.1.2
 
 [dell1]
 10.0.1.8
@@ -53,19 +53,5 @@ addr_osd_0=10.0.1.7
 addr_osd_1=10.0.1.8
 host=dell1
 host_addr=10.0.1.8
-host_mds=hp1
-addr_mds=10.0.1.1
-
-[test]
-10.0.1.2
-
-[test:vars]
-fsid=8ab9c1c5-a42c-45f7-9767-07aeefbbad0e
-host_mon=hp2
-addr_mon=10.0.1.6
-addr_osd_0=10.0.1.7
-addr_osd_1=10.0.1.8
-host=hp2
-host_addr=10.0.1.2
-host_mds=hp1
-addr_mds=10.0.1.1
+host_mds=hp2
+addr_mds=10.0.1.2

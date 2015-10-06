@@ -3,8 +3,9 @@
 - name: Test ansible
   shell: sudo touch test_ansible
 
-#- name: Remove old mon
-#  shell: ceph mon remove hp6
+- name: Remove old mon
+  shell: ceph mon remove hp6
+  ignore_errors: yes
 
 - name: Clear /var/run/ceph
   shell: sudo rm -r /var/run/ceph
@@ -31,55 +32,55 @@
   args:
     removes: /tmp/ceph.mon.keyring
 
-#- name: Delete old repo
-#  shell: sudo rm -rf Tiramisu
-#  args:
-#    removes: Tiramisu/this_is_dev_branch
+- name: Delete old repo
+  shell: sudo rm -rf Tiramisu
+  args:
+    removes: Tiramisu/this_is_dev_branch
 
-#- name: Clone ceph source code
-#  shell: git clone --recursive https://github.com/SOUP-CE-KMITL/Tiramisu.git --branch develop
+- name: Clone ceph source code
+  shell: git clone --recursive https://github.com/SOUP-CE-KMITL/Tiramisu.git --branch develop
 
-#- name: Change own for repo
-#  shell: sudo chown -R ceph Tiramisu
+- name: Change own for repo
+  shell: sudo chown -R ceph Tiramisu
 
-#- name: Change group for repo
-#  shell: sudo chgrp -R ceph Tiramisu
+- name: Change group for repo
+  shell: sudo chgrp -R ceph Tiramisu
 
-#- name: Install 3rd dependencies
-#  shell: sudo yum install {{ item }}
-#  with_items:
-#    - snappy
-#    - leveldb
-#    - gdisk
-#    - python-argparse
-#    - python-ceph
-#    - gperftools-libs
-#    - autoconf-archive
+- name: Install 3rd dependencies
+  shell: sudo yum install {{ item }}
+  with_items:
+    - snappy
+    - leveldb
+    - gdisk
+    - python-argparse
+    - python-ceph
+    - gperftools-libs
+    - autoconf-archive
 
-#- name: Install dependencies
-#  shell: ./install-deps.sh
-#  args:
-#    chdir: Tiramisu
+- name: Install dependencies
+  shell: ./install-deps.sh
+  args:
+    chdir: Tiramisu
 
-#- name: Build autogen
-#  shell: ./autogen.sh
-#  args:
-#    chdir: Tiramisu/ 
+- name: Build autogen
+  shell: ./autogen.sh
+  args:
+    chdir: Tiramisu/ 
 
-#- name: Build config
-#  shell: ./configure 
-#  args:
-#    chdir: Tiramisu
+- name: Build config
+  shell: ./configure 
+  args:
+    chdir: Tiramisu
 
-#- name: Build make
-#  shell: sudo make -j4
-#  args:
-#    chdir: Tiramisu
+- name: Build make
+  shell: sudo make -j4
+  args:
+    chdir: Tiramisu
 
-#- name: Install ceph
-#  shell: sudo make install
-#  args:
-#    chdir: Tiramisu
+- name: Install ceph
+  shell: sudo make install
+  args:
+    chdir: Tiramisu
 
 - name: Delete config folder
   shell: sudo rm -r /etc/ceph/
