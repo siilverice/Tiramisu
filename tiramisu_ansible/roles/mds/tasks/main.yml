@@ -132,6 +132,10 @@
 - name: Change permission lib ceph
   shell: sudo chmod -R 777 /var/lib/ceph/mds/mds.{{ id }}/
 
+- name: Remove old auth
+  shell: ceph auth del mds.{{ id }}
+  ignore_errors: yes
+
 - name: Create keyring
   shell: sudo /usr/local/bin/ceph auth get-or-create mds.{{ id }} mds 'allow ' osd 'allow *' mon 'allow rwx' > /var/lib/ceph/mds/mds.{{ id }}/keyring
 
