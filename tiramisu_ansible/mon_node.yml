@@ -1,5 +1,5 @@
 ---
-- hosts: hp6
+- hosts: hp2
 
   remote_user: ceph
 
