@@ -102,13 +102,6 @@
 - name: Create a keyring for your cluster and generate a monitor secret key.
   shell: ceph-authtool --create-keyring /tmp/ceph.mon.keyring --gen-key -n mon. --cap mon 'allow *'
 
-- name: Create a keyring for your cluster and generate a mds secret key.
-  shell: ceph-authtool /tmp/ceph.mon.keyring --gen-key \
-           -n mds.0 \
-           --cap mds 'allow *' \
-           --cap osd 'allow *' \
-           --cap mon 'allow rwx'
-
 - name: Remove old admin key
   shell: sudo rm /etc/ceph/ceph.client.admin.keyring
   args:
