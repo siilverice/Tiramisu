@@ -1,25 +1,13 @@
-[hp2]
-10.0.1.2
-
-[hp2:vars]
-fsid=391ff398-592c-41ff-bdaf-a5f9ecd0eb3b
-host_mon=hp2
-addr_mon=10.0.1.2
-addr_osd_0=10.0.1.7
-addr_osd_1=10.0.1.6
-host=hp2
-host_addr=10.0.1.2
-
 [hp7]
 10.0.1.7
 
 [hp7:vars]
 fsid=391ff398-592c-41ff-bdaf-a5f9ecd0eb3b
 id=0
-host_mon=hp2
-addr_mon=10.0.1.2
+host_mon=hp6
+addr_mon=10.0.1.6
 addr_osd_0=10.0.1.7
-addr_osd_1=10.0.1.6
+addr_osd_1=10.0.1.7
 host=hp7
 host_addr=10.0.1.7
 
@@ -29,9 +17,9 @@ host_addr=10.0.1.7
 [hp6:vars]
 fsid=391ff398-592c-41ff-bdaf-a5f9ecd0eb3b
 id=1
-host_mon=hp2
-addr_mon=10.0.1.2
+host_mon=hp6
+addr_mon=10.0.1.6
 addr_osd_0=10.0.1.7
-addr_osd_1=10.0.1.6
+addr_osd_1=10.0.1.7
 host=hp6
 host_addr=10.0.1.6
