@@ -145,3 +145,6 @@
 
 - name: Start mon service
   shell: sudo systemctl restart ceph-mon@{{ host }}
+
+- name: Distribute config
+  shell: scp /etc/ceph/ceph.client.admin.keyring ceph@10.0.1.7:/home/ceph/
