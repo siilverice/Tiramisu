@@ -23,3 +23,16 @@ addr_osd_0=10.0.1.7
 addr_osd_1=10.0.1.7
 host=hp6
 host_addr=10.0.1.6
+
+[hp1]
+10.0.1.1
+
+[hp7:vars]
+fsid=391ff398-592c-41ff-bdaf-a5f9ecd0eb3b
+host_mon=hp6
+addr_mon=10.0.1.6
+addr_osd_0=10.0.1.7
+addr_osd_1=10.0.1.7
+host=hp1
+host_addr=10.0.1.1
+

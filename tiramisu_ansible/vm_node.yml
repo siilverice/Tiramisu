@@ -1,0 +1,8 @@
+---
+- hosts: hp1
+
+  remote_user: ceph
+
+  roles:
+    - { role: install }
+
