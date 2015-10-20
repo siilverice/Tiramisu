@@ -1,19 +1,36 @@
 import os
+import time
 
+name = raw_input("# VM name\n>> ")
+command = "sudo virsh shutdown " + name
+os.system(command)
+print(command)
+time.sleep(30)
 
-
-name = raw_input("container name?\n>> ")
-command = "docker stop " + name
+command = "sudo virsh undefine " + name
+print(command)
 os.system(command)
 
-old_storage = raw_input("old storage?\n>> ")
-new_storage = raw_input("new storage?\n>> ")
-rbd_image_name = raw_input("rbd image name?\n>> ")
-command = "rbd cp " + old_storage + "/" + rbd_image_name + " " + new_storage + "/" + rbd_image_name
+old_pool = raw_input("# old pool\n>> ")
+new_pool = raw_input("# new pool\n>> ")
+img_name = raw_input("# image name\n>> ")
+command = "rbd cp " + old_pool + "/" + img_name + " " + new_pool + "/" + img_name
+print(command)
 os.system(command)
 
-imagename = raw_input("image_name?\n>> ")
-other_arg = raw_input("other argument?\n>> ")
-command = "docker run -it --volume-driver=rbd --volume " + new_storage + "/" + rbd_image_name  + ":/mnt/foo/mysql " + other_arg + " -d " + imagename
+command = "rbd rm " + old_pool + "/" + img_name
+print(command)
+os.system(command)
+
+filename = raw_input("# config xml filename (filename without .xml)\n>> ")
+command = "sed -i -e 's/" + old_pool + "\/" img_name + "/" + new_pool + "\/" + img_name + "/g' " + filename + ".xml"
+print(command)
+os.system(command)
+
+command = "sudo virsh define " + filename + ".xml"
+print(command)
+os.system(command)
+
+command = "sudo virsh start " + filename
 print(command)
 os.system(command)
