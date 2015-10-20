@@ -23,7 +23,7 @@ print(command)
 os.system(command)
 
 filename = raw_input("# config xml filename (filename without .xml)\n>> ")
-command = "sed -i -e 's/" + old_pool + "\/" img_name + "/" + new_pool + "\/" + img_name + "/g' " + filename + ".xml"
+command = "sed -i -e 's/" + old_pool + "\/" + img_name + "/" + new_pool + "\/" + img_name + "/g' " + filename + ".xml"
 print(command)
 os.system(command)
 
