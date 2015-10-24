@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Usage: sudo ./kvm_findip [vm_name]
+arp -e | grep "`virsh dumpxml  $1 | grep "mac address"|sed "s/.*'\(.*\)'.*/\1/g"`" |
+awk '{ printf $1 }'
