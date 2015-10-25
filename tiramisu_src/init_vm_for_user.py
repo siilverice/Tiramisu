@@ -1,5 +1,4 @@
 import os
-import time
 import subprocess
 
 name = raw_input("# vm name?\n>> ")
