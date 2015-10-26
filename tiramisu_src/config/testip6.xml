@@ -1,5 +1,5 @@
 <domain type='kvm'>
-  <name>testip4</name>
+  <name>testip6</name>
   <memory unit='KiB'>1048576</memory>
   <currentMemory unit='KiB'>1048576</currentMemory>
   <vcpu placement='static'>1</vcpu>
@@ -22,7 +22,7 @@
 
   <disk type='network' device='disk'>
      <driver name='qemu'/>
-     <source protocol='rbd' name='storage1/testip4'>
+     <source protocol='rbd' name='storage2/testip6'>
        <host name='10.0.1.6' port='6789'/>
      </source>
      <target dev='vda' bus='virtio'/>

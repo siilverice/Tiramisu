@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo virsh list --all | grep -w $1 |
+awk '{ printf $3 }'
