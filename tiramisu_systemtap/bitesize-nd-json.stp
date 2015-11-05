@@ -32,7 +32,8 @@ global sz;
 
 probe begin
 {
-	printf("Tracing block I/O... Hit Ctrl-C to end.\n");
+	// printf("Tracing block I/O... Hit Ctrl-C to end.\n");
+	printf("[\n");
 }
 
 probe kernel.trace("block_rq_insert") {
@@ -43,16 +44,22 @@ probe kernel.trace("block_rq_insert") {
 	sz[execname()] <<< $rq->__data_len;
 }
 
-probe timer.ms(10000)
+probe end
 {
-	printf("\nI/O size (bytes):\n\n");
+	// printf("\nI/O size (bytes):\n\n");
 	foreach (name in sz+) {
-		printf("process name: %s\n", name);
-		print(@hist_log(sz[name]));
-		print("avg. = ");
+		printf("{\n");
+		printf("\"name:\": \"%s\",\n", name);
+		printf("\"avg\": ");
 		print(@avg(sz[name]));
-		print("\n\n");
+		printf("\n},\n");
+		// printf("process name: %s\n", name);
+		// print(@hist_log(sz[name]));
+		// print("avg. = ");
+		// print(@avg(sz[name]));
+		// print("\n\n");
 	} 
+	printf("{}\n]\n");
 	delete sz;
 }
 

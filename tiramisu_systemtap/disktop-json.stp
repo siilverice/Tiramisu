@@ -15,6 +15,10 @@
 global io_stat,device
 global read_bytes,write_bytes
 
+probe begin {
+	printf("[\n");
+}
+
 probe vfs.read.return {
     if ($return>0) {
         if (devname!="N/A") {/*skip read from cache*/
@@ -38,29 +42,46 @@ probe vfs.write.return {
 probe timer.ms(5000) {
     /* skip non-read/write disk */
     if (read_bytes+write_bytes) {
+	printf("{\n");
+	printf("\"time\": %d,\n", gettimeofday_s());
+	printf("\"average\": %d,\n", (read_bytes+write_bytes)/5);
+	printf("\"read\": %d,\n", read_bytes);
+	printf("\"write\": %d,\n", write_bytes);
+
+	printf("\"info\":[\n");
+	/*
         printf("\n%-25s, %-8s%4dKb/sec, %-7s%6dKb, %-7s%6dKb\n\n",
-        ctime(gettimeofday_s()+10000000000),
+        ctime(gettimeofday_s()),
         "Average:", ((read_bytes+write_bytes)/1024)/5,
         "Read:",read_bytes/1024,
         "Write:",write_bytes/1024)
+	*/
+
         /* print header */
-        printf("%8s %8s %8s %25s %8s %4s %12s\n",
-        "UID","PID","PPID","CMD","DEVICE","T","BYTES")
-    }
-    /* print top ten I/O */
-    foreach ([process,cmd,userid,parent,action] in io_stat- limit 10)
+        // printf("%8s %8s %8s %25s %8s %4s %12s\n",
+        // "UID","PID","PPID","CMD","DEVICE","T","BYTES")
+	    /* print top ten I/O */
+	    foreach ([process,cmd,userid,parent,action] in io_stat- limit 10)
+	    {
+			// /*
+			printf("{\"UID\":%d, \"PID\":%d, \"PPID\":%d, \"CMD\":\"%s\", \"DEVICE\":\"%s\", \"T\":\"%s\", \"BYTES\":%d},\n",
+		    userid,process,parent,cmd,
+		    device[process,cmd,userid,parent,action],
+		    action,io_stat[process,cmd,userid,parent,action])
+			// */
+		/*
+			printf("%8d %8d %8d %25s %8s %4s %12d\n",
+		    userid,process,parent,cmd,
+		    device[process,cmd,userid,parent,action],
+		    action,io_stat[process,cmd,userid,parent,action])
+			*/
+	    }
 		// /*
-		printf("{\"UID\":%d, \"PID\":%d, \"PPID\":%d, \"CMD\":\"%s\", \"DEVICE\":\"%s\", \"T\":\"%s\", \"BYTES\":%d}\n",
-            userid,process,parent,cmd,
-            device[process,cmd,userid,parent,action],
-            action,io_stat[process,cmd,userid,parent,action])
+		printf("{\"UID\":%d, \"PID\":%d, \"PPID\":%d, \"CMD\":\"%s\", \"DEVICE\":\"%s\", \"T\":\"%s\", \"BYTES\":%d}\n]\n",
+			-1,-1,-1, "trailing-end", "", "", -1)
+		printf("},\n");
 		// */
-        /*
-		printf("%8d %8d %8d %25s %8s %4s %12d\n",
-            userid,process,parent,cmd,
-            device[process,cmd,userid,parent,action],
-            action,io_stat[process,cmd,userid,parent,action])
-		*/
+    }
 
     /* clear data */
     delete io_stat
@@ -70,6 +91,7 @@ probe timer.ms(5000) {
 }
 
 probe end{
+    printf("{}]\n");
     delete io_stat
     delete device
     delete read_bytes
