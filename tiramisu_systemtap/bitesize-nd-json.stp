@@ -49,7 +49,7 @@ probe end
 	// printf("\nI/O size (bytes):\n\n");
 	foreach (name in sz+) {
 		printf("{\n");
-		printf("\"name:\": \"%s\",\n", name);
+		printf("\"name\": \"%s\",\n", name);
 		printf("\"avg\": ");
 		print(@avg(sz[name]));
 		printf("\n},\n");
