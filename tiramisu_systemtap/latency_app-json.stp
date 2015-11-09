@@ -1,0 +1,23 @@
+#!/usr/bin/env stap
+
+global list
+
+probe begin {
+	printf("[\n");
+}
+
+probe process("/lib*/libc.so.*").function("open") {
+        list[pid(), ppid()] = gettimeofday_us()
+}
+
+probe process("/lib*/libc.so.*").function("open").return {
+        if([pid(),ppid()] in list) {
+                //printf("%s, PID %d, PPID %d, %s,  Latency  %d sec\n", ctime(gettimeofday_s()) ,  pid(), ppid(), execname(), gettimeofday_us()-list[pid(),ppid()]);
+		printf("{\"time\": %d, \"pid\": %d, \"ppid\": %d, \"execname\": \"%s\", \"latency\": %d},\n",
+				gettimeofday_s(), pid(), ppid(), execname(), gettimeofday_us()-list[pid(),ppid()]);
+	}
+}
+
+probe end {
+	printf("{}\n]\n");
+}
