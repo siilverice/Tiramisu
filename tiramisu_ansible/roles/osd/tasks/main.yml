@@ -52,41 +52,41 @@
 - name: Change group for repo
   shell: sudo chgrp -R ceph Tiramisu
 
-#- name: Install 3rd dependencies
-# shell: sudo yum -y install {{ item }}
-#  with_items:
-#    - snappy
-#    - leveldb
-#    - gdisk
-#    - python-argparse
-#    - python-ceph
-#    - gperftools-libs
-#    - autoconf-archive
+- name: Install 3rd dependencies
+ shell: sudo yum -y install {{ item }}
+  with_items:
+    - snappy
+    - leveldb
+    - gdisk
+    - python-argparse
+    - python-ceph
+    - gperftools-libs
+    - autoconf-archive
 
-#- name: Install dependencies
-#  shell: ./install-deps.sh
-#  args:
-#    chdir: Tiramisu
+- name: Install dependencies
+  shell: ./install-deps.sh
+  args:
+    chdir: Tiramisu
 
-#- name: Build autogen
-#  shell: ./autogen.sh
-#  args:
-#    chdir: Tiramisu/ 
+- name: Build autogen
+  shell: ./autogen.sh
+  args:
+    chdir: Tiramisu/ 
 
-#- name: Build config
-#  shell: ./configure 
-#  args:
-#    chdir: Tiramisu
+- name: Build config
+  shell: ./configure 
+  args:
+    chdir: Tiramisu
 
-#- name: Build make
-#  shell: sudo make -j4
-#  args:
-#    chdir: Tiramisu
+- name: Build make
+  shell: sudo make -j4
+  args:
+    chdir: Tiramisu
 
-#- name: Install ceph
-#  shell: sudo make install
-#  args:
-#    chdir: Tiramisu
+- name: Install ceph
+  shell: sudo make install
+  args:
+    chdir: Tiramisu
 
 - name: Copy ceph.conf
   template: src=ceph_1_mon.conf.j2 dest=/etc/ceph/ceph.conf
