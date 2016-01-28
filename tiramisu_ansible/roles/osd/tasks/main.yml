@@ -53,7 +53,7 @@
   shell: sudo chgrp -R ceph Tiramisu
 
 - name: Install 3rd dependencies
- shell: sudo yum -y install {{ item }}
+  shell: sudo yum -y install {{ item }}
   with_items:
     - snappy
     - leveldb
