@@ -4,4 +4,4 @@
   remote_user: ceph
 
   roles:
-    - { role: osd }
+    - { role: osd_SSD }
