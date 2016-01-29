@@ -13,6 +13,9 @@
   args:
     removes: /var/lib/ceph/osd
 
+- name: unmount SSD
+  shell: umount /var/lib/ceph/osd/ceph-{{ id }}
+
 - name: Delete config directory
   shell: sudo rm -r /etc/ceph/
   args:
@@ -127,11 +130,11 @@
 - name: Create directory mon ceph-node
   shell: sudo mkdir -p /var/lib/ceph/osd/ceph-{{ id }}
 
-- name: Change permission lib ceph
-  shell: sudo chmod -R 777 /var/lib/ceph/osd/ceph-{{ id }}/
-
 - name: mount SSD
   shell: sudo mount /dev/sdb1 /var/lib/ceph/osd/ceph-{{ id }}
+
+- name: Change permission lib ceph
+  shell: sudo chmod -R 777 /var/lib/ceph/osd/ceph-{{ id }}/
 
 - name: Initialize the OSD data directory
   shell: sudo /usr/local/bin/ceph-osd -i {{ id }} --mkfs --mkkey
