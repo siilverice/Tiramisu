@@ -1,5 +1,3 @@
-import ipdb
-
 
 #########################################################################################
 # data recieve from outside
@@ -153,7 +151,6 @@ def cal_cost(cost_mb, size):
 	return cost_mb * size
 
 def increase_size(cube, requirements):
-	#ipdb.set_trace()
 	cube["percentl"] = cube["percentl"] + requirements["percentl"]
 	cube["percenti"] = cube["percenti"] + requirements["percenti"]
 	cube["percentc"] = cube["percentc"] + requirements["percentc"]
@@ -167,7 +164,6 @@ def increase_size(cube, requirements):
 	return cube
 
 def decrease_size(cube, requirements):
-	#ipdb.set_trace()
 	if cube["percentl"] > 0:
 		cube["percentl"] = cube["percentl"] - requirements["percentl"]
 	if cube["percenti"] > 0:
@@ -184,7 +180,6 @@ def decrease_size(cube, requirements):
 	return cube
 
 def is_in_cube(cube, current_point):
-	#ipdb.set_trace()
 	if 	(cube["latency_min"] <= current_point[0] and current_point[0] <= cube["latency_max"] and 
 		cube["iops_min"] <= current_point[1] and current_point[1] <= cube["iops_max"] and 
 		cube["cost_min"] <= current_point[2] and current_point[2] <= cube["cost_max"]) :
@@ -193,7 +188,6 @@ def is_in_cube(cube, current_point):
 		return 0
 
 def find_other_storage_in_cube(point_storage, cube, current_point, current):
-	#ipdb.set_trace()
 	first = 1
 	found = 0
 	for storage in point_storage:
@@ -228,7 +222,6 @@ def find_other_storage_in_cube(point_storage, cube, current_point, current):
 		return [0, [], 0]
 
 def squeeze(point_storage, cube, current_point, current):
-	#ipdb.set_trace()
 	while 1:
 		cube = decrease_size(cube, requirements)
 		if not is_in_cube(cube, current_point) :
@@ -242,7 +235,6 @@ def squeeze(point_storage, cube, current_point, current):
 			return current
 
 def puff(point_storage, cube, current):
-	#ipdb.set_trace()
 	while 1:
 		cube = increase_size(cube, requirements)
 		first = 1
@@ -301,7 +293,6 @@ if __name__ == "__main__":
 	current = read_current_storage()
 	current_point = point_storage[current]
 
-	#ipdb.set_trace()
 	if is_in_cube(cube, current_point):
 		print squeeze(point_storage, cube, current_point, current)
 	else:
