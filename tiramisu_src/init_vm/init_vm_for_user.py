@@ -7,11 +7,11 @@ conn = sqlite3.connect('../tiramisu.db')
 c = conn.cursor()
 
 name = raw_input("# vm name?\n>> ")
-command = "cp HDD/default HDD/" + name
+command = "cp ../image/HDD/default ../image/HDD/" + name
 print(command)
 os.system(command)
 
-command = "cp ../config/default.xml ../config/" + name + ".xml"
+command = "cp ../image/config/default.xml ../image/config/" + name + ".xml"
 print(command)
 os.system(command)
 
@@ -23,7 +23,7 @@ command = "sed -i -e 's/\/image\/HDD\/default/\/image\/HDD\/" + name + "/g' ../c
 print(command)
 os.system(command)
 
-command = "sudo virsh define ../config/" + name + ".xml"
+command = "sudo virsh define ../image/config/" + name + ".xml"
 print(command)
 os.system(command)
 
