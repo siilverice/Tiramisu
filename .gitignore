@@ -1,3 +1,5 @@
+/tiramisu_src/image/*
+
 *.o
 *.lo
 *.a
