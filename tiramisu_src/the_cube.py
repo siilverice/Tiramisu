@@ -1,24 +1,26 @@
 import sqlite3
+import sys
+
 #########################################################################################
 # data recieve from outside
 
-def requirements():
+def requirements(name, c):
 	# create requirement table to store all of this (column by column)
 	# this function will read data from table and store in dictionary
 	# edit value when user change requirement
+	c.execute("select * from requirements where vm_name=?", (name,))
+	requirements = c.fetchone()
 
-	
-
-	latency = 4
-	latency_max = 6
-	percentl = 5
-	iops_min = 400
-	iops = 500
-	percenti = 10
-	cost = 50
-	cost_max = 90
-	percentc = 10
-	app_type = 1
+	latency 	= requirements[1]
+	latency_max = requirements[2]
+	percentl 	= requirements[3]
+	iops_min 	= requirements[4]
+	iops 		= requirements[5]
+	percenti 	= requirements[6]
+	cost 		= requirements[7]
+	cost_max 	= requirements[8]
+	percentc 	= requirements[9]
+	app_type 	= requirements[10]
 
 	return { 	"latency" 		: latency,
 				"latency_max" 	: latency_max,
@@ -31,39 +33,27 @@ def requirements():
 				"percentc"		: percentc,
 				"app_type"		: app_type }
 
-def cube(choice):
+def cube(name, c):
 	# create cube table to store all of this (column by column) (copy from requirement at first)
 	# this function will read data from table and store in dictionary
 	# edit value when squeeze or puff
-	if choice == 1 or choice == 2 or choice == 3:
-		latency_min = 3.8 
-		latency = 4
-		latency_max = 6
-		percentl = 5
-		iops_min = 400
-		iops = 500
-		iops_max = 550
-		percenti = 10
-		cost_min = 45
-		cost = 50
-		cost_max = 90
-		percentc = 10
-		app_type = 1
 
-	else:
-		latency_min = 3.6
-		latency = 4
-		latency_max = 6.2
-		percentl = 5
-		iops_min = 350
-		iops = 500
-		iops_max = 600
-		percenti = 10
-		cost_min = 40
-		cost = 50
-		cost_max = 95
-		percentc = 10
-		app_type = 1		
+	c.execute("select * from cube where vm_name=?", (name,))
+	cube = c.fetchone()
+
+	latency_min = cube[1]
+	latency 	= cube[2]
+	latency_max = cube[3]
+	percentl 	= cube[4]
+	iops_min 	= cube[5]
+	iops 		= cube[6]
+	iops_max 	= cube[7]
+	percenti 	= cube[8]
+	cost_min 	= cube[9]
+	cost 		= cube[10]
+	cost_max 	= cube[11]
+	percentc 	= cube[12]
+	app_type 	= cube[13]	
 
 	return { 	"latency_min"	: latency_min,
 				"latency" 		: latency,
@@ -78,52 +68,6 @@ def cube(choice):
 				"cost_max" 		: cost_max,
 				"percentc"		: percentc,
 				"app_type"		: app_type }
-
-def storage_status(choice):
-	# recieve from systemtap
-	# systemtap will exec this code
-
-	if choice == 1:
-		latency_hdd = 5
-		iops_hdd = 401
-		latency_ssd = 2
-		iops_ssd = 600
-	elif choice == 2:
-		latency_hdd = 8
-		iops_hdd = 401
-		latency_ssd = 3.7
-		iops_ssd = 570
-	elif choice == 3:
-		latency_hdd = 6
-		iops_hdd = 500
-		latency_ssd = 2
-		iops_ssd = 1000
-	elif choice == 4:
-		latency_hdd = 6.1
-		iops_hdd = 500
-		latency_ssd = 4
-		iops_ssd = 600
-	else:
-		latency_hdd = 6.1
-		iops_hdd = 500
-		latency_ssd = 3.9
-		iops_ssd = 500
-
-	return {	"latency_hdd" 	: latency_hdd,
-				"latency_ssd" 	: latency_ssd,
-				"iops_hdd"		: iops_hdd,
-				"iops_ssd"		: iops_ssd }
-	
-def get_size_vm():
-	# receive from outside
-	size = 1000
-	return size
-
-def read_current_storage():
-	# read from DB
-	return 'HDD'
-
-#########################################################################################
 
 def cal_percent(pc, data):
 	return (data * pc) / 100.00
@@ -255,30 +199,39 @@ if __name__ == "__main__":
 	cost_mb_SSD = 0.090
 	cost_mb_HDD = 0.050
 
-	print("""select case:\n1. current in requirements
-2. current out of cube and another storage closer than current
-3. current out of cube and current closest
-4. current out of small cube(or requirements) but in cube and another storage is same
-5. current out of small cube(or requirements) but in cube and another storage in small cube(or requirements)""")
-	choice = input(">>> ")
+	arg 		= sys.argv
+	name 		= arg[1]
+	latency_vm 	= arg[2]
+	iops_vm 	= arg[3]
+	latency_hdd	= arg[4] 
+	iops_hdd 	= arg[5]
+	latency_ssd	= arg[6]
+	iops_ssd 	= arg[7]
 
-	requirements = requirements()
-	cube = cube(choice)
+	requirements = requirements(name, c)
+	cube = cube(name, c)
 
-	get_size_vm = get_size_vm()
+	c.execute("select * from vm where name=?", (name,))
+	vm_details = c.fetchone()
+
+	get_size_vm = vm_details[5]
 	cost_SSD = cal_cost(cost_mb_SSD, get_size_vm)
 	cost_HDD = cal_cost(cost_mb_HDD, get_size_vm)
 
-	storage_status = storage_status(choice)
+	if vm_details[4] == 'SSD':
+		point_storage = { 	"SSD" : latency_vm, iops_vm, cost_SSD],
+							"HDD" : latency_hdd, iops_hdd, cost_HDD] }
+	else:
+		point_storage = { 	"SSD" : latency_ssd, iops_ssd, cost_SSD],
+							"HDD" : latency_vm, iops_vm, cost_HDD] }
 
-	point_storage = { 	"SSD" : [storage_status["latency_ssd"], storage_status["iops_ssd"], cost_SSD],
-						"HDD" : [storage_status["latency_hdd"], storage_status["iops_hdd"], cost_HDD] }
-
-	current = read_current_storage()
+	c.execute("select current_pool from storage where vm_name=?", (name,))
+	pool = c.fetchone()
+	current = pool[0]
 	current_point = point_storage[current]
 
 	if is_in_cube(cube, current_point):
-		print squeeze(point_storage, cube, current_point, current)
+		ans = squeeze(point_storage, cube, current_point, current)
 	else:
 		# current storage not meet requirement
 		result = find_other_storage_in_cube(point_storage, cube, current_point, current)
@@ -286,7 +239,11 @@ if __name__ == "__main__":
 			# still have other point in requirement
 			current_point = result[1]
 			current = result[2]
-			print squeeze(point_storage, cube, current_point, current)
+			ans = squeeze(point_storage, cube, current_point, current)
 		else:
 			# not have any point in requirement
-			print puff(point_storage, cube, current)
+			ans = puff(point_storage, cube, current)
+
+	c.execute("insert into storage (vm_name,current_pool,appropiate_pool) values (?,?,?)", (name,vm_details[4],ans,))
+	conn.commit()
+	c.close()

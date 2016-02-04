@@ -6,7 +6,18 @@ import sqlite3
 conn = sqlite3.connect('../tiramisu.db')
 c = conn.cursor()
 
-name = raw_input("# vm name?\n>> ")
+name 		= raw_input("# vm name?\n>> ")
+latency 	= input("# latency\n>> ")
+latency_max = input("# latency_max\n>> ")
+percentl 	= input("# percentl\n>> ")
+iops_min 	= input("# iops_min\n>> ")
+iops 		= input("# iops\n>> ")
+percenti 	= input("# percenti\n>> ")
+cost 		= input("# cost\n>> ")
+cost_max 	= input("# cost_max\n>> ")
+percentc 	= input("# percentc\n>> ")
+app_type 	= input("# app_type\n>> ")
+
 command = "cp ../image/HDD/default ../image/HDD/" + name
 print(command)
 os.system(command)
@@ -45,5 +56,6 @@ while True:
 print "Default username : centos7\nDefault password : root"
 
 c.execute("insert into vm (name,ip,status,pool) values (?,?,1,'HDD')", (name,ip,))
+c.execute("insert into requirements (latency,latency_max,percentl,iops_min,iops,percenti,cost,cost_max,percentc,app_type) values (?,?,?,?,?,?,?,?,?,?)", (latency,latency_max,percentl,iops_min,iops,percenti,cost,cost_max,percentc,app_type,))
 conn.commit()
 c.close()
