@@ -44,6 +44,6 @@ while True:
 
 print "Default username : centos7\nDefault password : root"
 
-c.execute("insert into vm (name,ip,status,pool) values (?,?,1,'storage1')", (name,ip,))
+c.execute("insert into vm (name,ip,status,pool) values (?,?,1,'HDD')", (name,ip,))
 conn.commit()
 c.close()

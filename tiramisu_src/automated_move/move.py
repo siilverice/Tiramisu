@@ -36,19 +36,17 @@ c.execute("select pool from vm where name=?",(name,))
 data = c.fetchone()
 old_pool = data[0]
 new_pool = raw_input("# new pool\n>> ")
-command = "rbd cp " + old_pool + "/" + name + " " + new_pool + "/" + name
+command1 = "cp ../image/" + old_pool + "/" + name + " ../image/" + new_pool + "/" + name
+command2 = "rm ../image/" + old_pool + "/" + name
+command = command1 + " && " + command2
 print(command)
 os.system(command)
 
-command = "rbd rm " + old_pool + "/" + name
+command = "sed -i -e 's/\/image\/" + old_pool + "\/" + name + "/\/image\/" + new_pool + "\/" + name + "/g' ../image/config/" + name + ".xml"
 print(command)
 os.system(command)
 
-command = "sed -i -e 's/" + old_pool + "\/" + name + "/" + new_pool + "\/" + name + "/g' ../config/" + name + ".xml"
-print(command)
-os.system(command)
-
-command = "sudo virsh define ../config/" + name + ".xml"
+command = "sudo virsh define ../image/config/" + name + ".xml"
 print(command)
 os.system(command)
 
