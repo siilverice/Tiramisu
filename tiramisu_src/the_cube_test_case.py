@@ -1,4 +1,4 @@
-import sqlite3
+
 #########################################################################################
 # data recieve from outside
 
@@ -6,8 +6,6 @@ def requirements():
 	# create requirement table to store all of this (column by column)
 	# this function will read data from table and store in dictionary
 	# edit value when user change requirement
-
-	
 
 	latency = 4
 	latency_max = 6
@@ -249,9 +247,6 @@ def puff(point_storage, cube, current):
 			return current		
 
 if __name__ == "__main__":
-	conn = sqlite3.connect('tiramisu.db')
-	c = conn.cursor()
-
 	cost_mb_SSD = 0.090
 	cost_mb_HDD = 0.050
 
