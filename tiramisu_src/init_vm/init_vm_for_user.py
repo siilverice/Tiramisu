@@ -15,11 +15,11 @@ command = "cp ../image/config/default.xml ../image/config/" + name + ".xml"
 print(command)
 os.system(command)
 
-command = "sed -i -e 's/<name>default<\/name>/<name>" + name + "<\/name>/g' ../config/" + name + ".xml"
+command = "sed -i -e 's/<name>default<\/name>/<name>" + name + "<\/name>/g' ../image/config/" + name + ".xml"
 print(command)
 os.system(command)
 
-command = "sed -i -e 's/\/image\/HDD\/default/\/image\/HDD\/" + name + "/g' ../config/" + name + ".xml"
+command = "sed -i -e 's/\/image\/HDD\/default/\/image\/HDD\/" + name + "/g' ../image/config/" + name + ".xml"
 print(command)
 os.system(command)
 
