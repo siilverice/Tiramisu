@@ -6,20 +6,6 @@ def requirements():
 	# create requirement table to store all of this (column by column)
 	# this function will read data from table and store in dictionary
 	# edit value when user change requirement
-	
-	# latency = input("latency = ")
-	# latency_max = input("latency_max = ")
-	# percentl = input("% = ")
-
-	# iops_min = input("iops_min = ")
-	# iops = input("iops = ")
-	# percenti = input("% = ")
-
-	# cost = input("cost = ")
-	# cost_max = input("cost_max = ")
-	# percentc = input("% = ")
-
-	# app_type = input("app type\n1 is website\n2 is database\n3 is batch job\n: ")
 
 	latency = 4
 	latency_max = 6
@@ -95,12 +81,6 @@ def storage_status(choice):
 	# recieve from systemtap
 	# systemtap will exec this code
 
-	# latency_hdd = input("latency from HDD = ")
-	# latency_ssd = input("latency from SSD = ")
-
-	# iops_hdd = input("IOPS from HDD = ")
-	# iops_ssd = input("IOPS from SSD = ")
-
 	if choice == 1:
 		latency_hdd = 5
 		iops_hdd = 401
@@ -134,7 +114,6 @@ def storage_status(choice):
 	
 def get_size_vm():
 	# receive from outside
-	# size = input("image size = ")
 	size = 1000
 	return size
 

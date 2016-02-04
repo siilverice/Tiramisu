@@ -10,7 +10,6 @@ name = raw_input("# VM name\n>> ")
 
 c.execute("select status from vm where name=?", (name,))
 status = c.fetchone()
-
 if status[0] == 1:
         command = "sudo virsh shutdown " + name
         os.system(command)
