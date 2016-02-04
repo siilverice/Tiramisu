@@ -10,6 +10,7 @@ name = raw_input("# VM name\n>> ")
 
 c.execute("select status from vm where name=?", (name,))
 status = c.fetchone()
+
 if status[0] == 1:
         command = "sudo virsh shutdown " + name
         os.system(command)
@@ -37,7 +38,7 @@ data = c.fetchone()
 old_pool = data[0]
 new_pool = raw_input("# new pool\n>> ")
 command1 = "cp ../image/" + old_pool + "/" + name + " ../image/" + new_pool + "/" + name
-command2 = "rm ../image/" + old_pool + "/" + name
+command2 = "rm -f ../image/" + old_pool + "/" + name
 command = command1 + " && " + command2
 print(command)
 os.system(command)
