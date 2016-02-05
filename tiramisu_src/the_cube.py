@@ -69,6 +69,23 @@ def cube(name, c):
 				"percentc"		: percentc,
 				"app_type"		: app_type }
 
+def get_state(name, c):
+	c.execute("select * from state where name=?", (name,))
+	state = c.fetchone()
+	latency_vm 	= state[1]
+	iops_vm 	= state[2]
+	latency_hdd	= state[3]
+	iops_hdd 	= state[4]
+	latency_ssd	= state[5]
+	iops_ssd 	= state[6]
+
+	return {	"latency_vm"	: latency_vm,
+				"iops_vm"		: iops_vm,
+				"latency_hdd"	: latency_hdd,
+				"iops_hdd"		: iops_hdd,
+				"latency_ssd"	: latency_ssd,
+				"iops_ssd"		: iops_ssd }
+
 def cal_percent(pc, data):
 	return (data * pc) / 100.00
 
@@ -201,12 +218,14 @@ if __name__ == "__main__":
 
 	arg 		= sys.argv
 	name 		= arg[1]
-	latency_vm 	= arg[2]
-	iops_vm 	= arg[3]
-	latency_hdd	= arg[4] 
-	iops_hdd 	= arg[5]
-	latency_ssd	= arg[6]
-	iops_ssd 	= arg[7]
+	
+	state = get_state(name, c)
+	latency_vm 	= get_state["latency_vm"]
+	iops_vm 	= get_state["iops_vm"]
+	latency_hdd	= get_state["latency_hdd"]
+	iops_hdd 	= get_state["iops_hdd"]
+	latency_ssd	= get_state["latency_ssd"]
+	iops_ssd 	= get_state["iops_ssd"]
 
 	requirements = requirements(name, c)
 	cube = cube(name, c)
