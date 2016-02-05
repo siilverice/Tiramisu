@@ -1,12 +1,13 @@
 import os
 import sqlite3
 import subprocess
-
+import sys
 
 conn = sqlite3.connect('../tiramisu.db')
 c = conn.cursor()
 
-name = raw_input("# VM name\n>> ")
+arg = sys.argv
+name = arg[1]
 
 c.execute("select status from vm where name=?", (name,))
 status = c.fetchone()
@@ -32,10 +33,10 @@ command = "sudo virsh undefine " + name
 print(command)
 os.system(command)
 
-c.execute("select pool from vm where name=?",(name,))
+c.execute("select * from storage where name=?",(name,))
 data = c.fetchone()
-old_pool = data[0]
-new_pool = raw_input("# new pool\n>> ")
+old_pool = data[2]
+new_pool = data[3]
 command1 = "cp ../image/" + old_pool + "/" + name + " ../image/" + new_pool + "/" + name
 command2 = "rm -f ../image/" + old_pool + "/" + name
 command = command1 + " && " + command2
@@ -54,6 +55,7 @@ command = "sudo virsh start " + name
 print(command)
 os.system(command)
 
-c.execute("update vm set pool=?,status=1 where name=?",(new_pool,name,))
+c.execute("update vm set status=1 where name=?",(name,))
+c.execute("update storage set current_pool=? where name=?",(new_pool,name,))
 conn.commit()
 c.close()
