@@ -33,12 +33,12 @@ command = "sudo virsh undefine " + name
 print(command)
 os.system(command)
 
-c.execute("select * from storage where name=?",(name,))
+c.execute("select * from storage where vm_name=?",(name,))
 data = c.fetchone()
 old_pool = data[2]
 new_pool = data[3]
-command1 = "cp ../image/" + old_pool + "/" + name + " ../image/" + new_pool + "/" + name
-command2 = "rm -f ../image/" + old_pool + "/" + name
+command1 = "sudo cp ../image/" + old_pool + "/" + name + " ../image/" + new_pool + "/" + name
+command2 = "sudo rm -f ../image/" + old_pool + "/" + name
 command = command1 + " && " + command2
 print(command)
 os.system(command)
@@ -56,6 +56,6 @@ print(command)
 os.system(command)
 
 c.execute("update vm set status=1 where name=?",(name,))
-c.execute("update storage set current_pool=? where name=?",(new_pool,name,))
+c.execute("update storage set current_pool=? where vm_name=?",(new_pool,name,))
 conn.commit()
 c.close()

@@ -1,5 +1,6 @@
 import sqlite3
 import sys
+import ipdb
 
 #########################################################################################
 # data recieve from outside
@@ -177,6 +178,7 @@ def squeeze(point_storage, cube, current_point, current):
 			return current
 
 def puff(point_storage, cube, current):
+	ipdb.set_trace()
 	while 1:
 		cube = increase_size(cube, requirements)
 		first = 1
@@ -235,7 +237,7 @@ if __name__ == "__main__":
 	c.execute("select * from storage where vm_name=?", (name,))
 	storage_vm = c.fetchone()
 
-	get_size_vm = vm_details[5]
+	get_size_vm = vm_details[4]
 	cost_SSD = cal_cost(cost_mb_SSD, get_size_vm)
 	cost_HDD = cal_cost(cost_mb_HDD, get_size_vm)
 
@@ -250,7 +252,8 @@ if __name__ == "__main__":
 	pool = c.fetchone()
 	current = pool[0]
 	current_point = point_storage[current]
-
+	
+	ipdb.set_trace()
 	if is_in_cube(cube, current_point):
 		ans = squeeze(point_storage, cube, current_point, current)
 	else:
