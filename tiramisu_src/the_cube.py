@@ -269,6 +269,7 @@ if __name__ == "__main__":
 			ans = puff(point_storage, cube, current)
 
 	if ans != storage_vm[3]:
+		c.execute("update cube set latency_min=?,latency=?,latency_max=?,percentl=?,iops_min=?,iops=?,iops_max=?,percenti=?,cost_min=?,cost=?,cost_max=?,percentc=?,app_type=? where vm_name=?",(cube["latency_min"],cube["latency"],cube["latency_max"],cube["percentl"],cube["iops_min"],cube["iops"],cube["iops_max"],cube["percenti"],cube["cost_min"],cube["cost"],cube["cost_max"],cube["percentc"],cube["app_type"],name,))
 		c.execute("update storage set appropiate_pool=? where vm_name=?",(ans,name,))
 	conn.commit()
 	c.close()
