@@ -219,7 +219,7 @@ if __name__ == "__main__":
 	arg 		= sys.argv
 	name 		= arg[1]
 	
-	state = get_state(name, c)
+	get_state = get_state(name, c)
 	latency_vm 	= get_state["latency_vm"]
 	iops_vm 	= get_state["iops_vm"]
 	latency_hdd	= get_state["latency_hdd"]
@@ -232,7 +232,7 @@ if __name__ == "__main__":
 
 	c.execute("select * from vm where name=?", (name,))
 	vm_details = c.fetchone()
-	c.execute("select * from storage where name=?", (name,))
+	c.execute("select * from storage where vm_name=?", (name,))
 	storage_vm = c.fetchone()
 
 	get_size_vm = vm_details[5]
@@ -240,11 +240,11 @@ if __name__ == "__main__":
 	cost_HDD = cal_cost(cost_mb_HDD, get_size_vm)
 
 	if storage_vm[2] == 'SSD':
-		point_storage = { 	"SSD" : latency_vm, iops_vm, cost_SSD],
-							"HDD" : latency_hdd, iops_hdd, cost_HDD] }
+		point_storage = { 	"SSD" : [latency_vm, iops_vm, cost_SSD],
+							"HDD" : [latency_hdd, iops_hdd, cost_HDD] }
 	else:
-		point_storage = { 	"SSD" : latency_ssd, iops_ssd, cost_SSD],
-							"HDD" : latency_vm, iops_vm, cost_HDD] }
+		point_storage = { 	"SSD" : [latency_ssd, iops_ssd, cost_SSD],
+							"HDD" : [latency_vm, iops_vm, cost_HDD] }
 
 	c.execute("select current_pool from storage where vm_name=?", (name,))
 	pool = c.fetchone()
@@ -266,6 +266,6 @@ if __name__ == "__main__":
 			ans = puff(point_storage, cube, current)
 
 	if ans != storage_vm[3]:
-		c.execute("update storage set appropiate_pool=? where name=?",(ans,name,))
+		c.execute("update storage set appropiate_pool=? where vm_name=?",(ans,name,))
 	conn.commit()
 	c.close()
