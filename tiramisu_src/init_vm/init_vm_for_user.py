@@ -1,6 +1,6 @@
 import os
 import subprocess
-import sqlite3
+import psycopg2
 
 def get_requirement():
 	name 		= raw_input("# vm name?\n>> ")
@@ -58,7 +58,11 @@ def create_cube(requirements):
 				"app_type"		: app_type }
 
 if __name__ == "__main__":
-	conn = sqlite3.connect('../tiramisu.db')
+	try:
+	    conn = psycopg2.connect(database='tiramisu', user='postgres', host='161.246.70.75', port='5432', password='12344321')
+	except:
+	    print "Nooooooooo"
+
 	c = conn.cursor()
 
 	requirements = get_requirement()
