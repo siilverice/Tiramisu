@@ -106,9 +106,9 @@ if __name__ == "__main__":
 
 	cube = create_cube(requirements)
 
-	c.execute("insert into cube (vm_name,latency_min,latency,latency_max,percentl,iops_min,iops,iops_max,percenti,cost_min,cost,cost_max,percentc,app_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (requirements["name"],cube["latency_min"],cube["latency"],cube["latency_max"],cube["percentl"],cube["iops_min"],cube["iops"],cube["iops_max"],cube["percenti"],cube["cost_min"],cube["cost"],cube["cost_max"],cube["percentc"],cube["app_type"],))
-	c.execute("insert into vm (name,ip,status) values (?,?,1)", (requirements["name"],ip,))
-	c.execute("insert into storage (vm_name,current_pool,appropiate_pool) values (?,'HDD','HDD')", (requirements["name"],))
-	c.execute("insert into requirements (vm_name,latency,latency_max,percentl,iops_min,iops,percenti,cost,cost_max,percentc,app_type) values (?,?,?,?,?,?,?,?,?,?,?)", (requirements["name"],requirements['latency'],requirements['latency_max'],requirements['percentl'],requirements['iops_min'],requirements['iops'],requirements['percenti'],requirements['cost'],requirements['cost_max'],requirements['percentc'],requirements['app_type'],))
+	c.execute("insert into cube (vm_name,latency_min,latency,latency_max,percentl,iops_min,iops,iops_max,percenti,cost_min,cost,cost_max,percentc,app_type) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (requirements["name"],cube["latency_min"],cube["latency"],cube["latency_max"],cube["percentl"],cube["iops_min"],cube["iops"],cube["iops_max"],cube["percenti"],cube["cost_min"],cube["cost"],cube["cost_max"],cube["percentc"],cube["app_type"],))
+	c.execute("insert into vm (name,ip,status) values (%s,%s,1)", (requirements["name"],ip,))
+	c.execute("insert into storage (vm_name,current_pool,appropiate_pool) values (%s,'HDD','HDD')", (requirements["name"],))
+	c.execute("insert into requirements (vm_name,latency,latency_max,percentl,iops_min,iops,percenti,cost,cost_max,percentc,app_type) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (requirements["name"],requirements['latency'],requirements['latency_max'],requirements['percentl'],requirements['iops_min'],requirements['iops'],requirements['percenti'],requirements['cost'],requirements['cost_max'],requirements['percentc'],requirements['app_type'],))
 	conn.commit()
 	c.close()
