@@ -70,7 +70,7 @@ def cube(name, c):
 				"app_type"		: app_type }
 
 def get_state(name, c):
-	c.execute("select * from tiramisu_state where name=%s", (name,))
+	c.execute("select * from tiramisu_state where vm_name=%s", (name,))
 	state = c.fetchone()
 	latency_vm 	= state[1]
 	iops_vm 	= state[2]
