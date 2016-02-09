@@ -269,7 +269,7 @@ if __name__ == "__main__":
 			# not have any point in requirement
 			ans = puff(point_storage, cube, current)
 
-	if ans != storage_vm[3]:
+	if ans != storage_vm[2]:
 		c.execute("update tiramisu_cube set latency_min=%s,latency=%s,latency_max=%s,percentl=%s,iops_min=%s,iops=%s,iops_max=%s,percenti=%s,cost_min=%s,cost=%s,cost_max=%s,percentc=%s,app_type=%s where vm_name=%s",(cube["latency_min"],cube["latency"],cube["latency_max"],cube["percentl"],cube["iops_min"],cube["iops"],cube["iops_max"],cube["percenti"],cube["cost_min"],cube["cost"],cube["cost_max"],cube["percentc"],cube["app_type"],name,))
 		c.execute("update tiramisu_storage set appropiate_pool=%s where vm_name=%s",(ans,name,))
 	conn.commit()
