@@ -1,6 +1,5 @@
-import sqlite3
+import psycopg2
 import sys
-import ipdb
 
 #########################################################################################
 # data recieve from outside
@@ -9,7 +8,7 @@ def requirements(name, c):
 	# create requirement table to store all of this (column by column)
 	# this function will read data from table and store in dictionary
 	# edit value when user change requirement
-	c.execute("select * from requirements where vm_name=?", (name,))
+	c.execute("select * from tiramisu_requirements where vm_name=%s", (name,))
 	requirements = c.fetchone()
 
 	latency 	= requirements[1]
@@ -39,7 +38,7 @@ def cube(name, c):
 	# this function will read data from table and store in dictionary
 	# edit value when squeeze or puff
 
-	c.execute("select * from cube where vm_name=?", (name,))
+	c.execute("select * from tiramisu_cube where vm_name=%s", (name,))
 	cube = c.fetchone()
 
 	latency_min = cube[1]
@@ -71,7 +70,7 @@ def cube(name, c):
 				"app_type"		: app_type }
 
 def get_state(name, c):
-	c.execute("select * from state where name=?", (name,))
+	c.execute("select * from tiramisu_state where name=%s", (name,))
 	state = c.fetchone()
 	latency_vm 	= state[1]
 	iops_vm 	= state[2]
@@ -178,7 +177,6 @@ def squeeze(point_storage, cube, current_point, current):
 			return current
 
 def puff(point_storage, cube, current):
-	ipdb.set_trace()
 	while 1:
 		cube = increase_size(cube, requirements)
 		first = 1
@@ -212,7 +210,11 @@ def puff(point_storage, cube, current):
 			return current		
 
 if __name__ == "__main__":
-	conn = sqlite3.connect('tiramisu.db')
+	try:
+    	conn = psycopg2.connect(database='tiramisu', user='postgres', host='localhost', port='5432', password='12344321')
+	except:
+    	print "Nooooooooo"
+
 	c = conn.cursor()
 
 	cost_mb_SSD = 0.090
@@ -232,9 +234,9 @@ if __name__ == "__main__":
 	requirements = requirements(name, c)
 	cube = cube(name, c)
 
-	c.execute("select * from vm where name=?", (name,))
+	c.execute("select * from tiramisu_vm where name=%s", (name,))
 	vm_details = c.fetchone()
-	c.execute("select * from storage where vm_name=?", (name,))
+	c.execute("select * from tiramisu_storage where vm_name=%s", (name,))
 	storage_vm = c.fetchone()
 
 	get_size_vm = vm_details[4]
@@ -248,12 +250,11 @@ if __name__ == "__main__":
 		point_storage = { 	"SSD" : [latency_ssd, iops_ssd, cost_SSD],
 							"HDD" : [latency_vm, iops_vm, cost_HDD] }
 
-	c.execute("select current_pool from storage where vm_name=?", (name,))
+	c.execute("select current_pool from tiramisu_storage where vm_name=%s", (name,))
 	pool = c.fetchone()
 	current = pool[0]
 	current_point = point_storage[current]
 	
-	ipdb.set_trace()
 	if is_in_cube(cube, current_point):
 		ans = squeeze(point_storage, cube, current_point, current)
 	else:
@@ -269,7 +270,7 @@ if __name__ == "__main__":
 			ans = puff(point_storage, cube, current)
 
 	if ans != storage_vm[3]:
-		c.execute("update cube set latency_min=?,latency=?,latency_max=?,percentl=?,iops_min=?,iops=?,iops_max=?,percenti=?,cost_min=?,cost=?,cost_max=?,percentc=?,app_type=? where vm_name=?",(cube["latency_min"],cube["latency"],cube["latency_max"],cube["percentl"],cube["iops_min"],cube["iops"],cube["iops_max"],cube["percenti"],cube["cost_min"],cube["cost"],cube["cost_max"],cube["percentc"],cube["app_type"],name,))
-		c.execute("update storage set appropiate_pool=? where vm_name=?",(ans,name,))
+		c.execute("update tiramisu_cube set latency_min=%s,latency=%s,latency_max=%s,percentl=%s,iops_min=%s,iops=%s,iops_max=%s,percenti=%s,cost_min=%s,cost=%s,cost_max=%s,percentc=%s,app_type=%s where vm_name=%s",(cube["latency_min"],cube["latency"],cube["latency_max"],cube["percentl"],cube["iops_min"],cube["iops"],cube["iops_max"],cube["percenti"],cube["cost_min"],cube["cost"],cube["cost_max"],cube["percentc"],cube["app_type"],name,))
+		c.execute("update tiramisu_storage set appropiate_pool=%s where vm_name=%s",(ans,name,))
 	conn.commit()
 	c.close()
