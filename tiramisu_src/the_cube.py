@@ -211,9 +211,9 @@ def puff(point_storage, cube, current):
 
 if __name__ == "__main__":
 	try:
-    	conn = psycopg2.connect(database='tiramisu', user='postgres', host='localhost', port='5432', password='12344321')
+		conn = psycopg2.connect(database='tiramisu', user='postgres', host='localhost', port='5432', password='12344321')
 	except:
-    	print "Nooooooooo"
+		print "Nooooooooo"
 
 	c = conn.cursor()
 
