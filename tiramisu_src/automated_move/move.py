@@ -39,8 +39,8 @@ os.system(command)
 
 c.execute("select * from tiramisu_storage where vm_name=%s",(name,))
 data = c.fetchone()
-old_pool = data[2]
-new_pool = data[3]
+old_pool = data[1]
+new_pool = data[2]
 command1 = "sudo cp ../image/" + old_pool + "/" + name + " ../image/" + new_pool + "/" + name
 command2 = "sudo rm -f ../image/" + old_pool + "/" + name
 command = command1 + " && " + command2
@@ -60,6 +60,6 @@ print(command)
 os.system(command)
 
 c.execute("update tiramisu_vm set status=1 where name=%s",(name,))
-c.execute("update tiramisu_storage set current_pool=%s where vm_name=%s",(new_pool,name,))
+c.execute("update tiramisu_storage set current_pool=%s,notice=0 where vm_name=%s",(new_pool,name,))
 conn.commit()
 c.close()
