@@ -65,9 +65,9 @@ os.system(command)
 c.execute("select size from tiramisu_vm where name=%s", (name,))
 size = c.fetchone()
 if new_pool=='HDD':
-    cost = size * cost_mb_HDD
+    cost = float(size) * cost_mb_HDD
 else:
-    cost = size * cost_mb_SSD
+    cost = float(size) * cost_mb_SSD
 
 c.execute("update tiramisu_vm set status=1,cost=%s where name=%s",(cost,name,))
 c.execute("update tiramisu_storage set current_pool=%s where vm_name=%s",(new_pool,name,))
