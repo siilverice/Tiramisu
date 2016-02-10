@@ -239,11 +239,11 @@ if __name__ == "__main__":
 	c.execute("select * from tiramisu_storage where vm_name=%s", (name,))
 	storage_vm = c.fetchone()
 
-	get_size_vm = vm_details[4]
+	get_size_vm = vm_details[5]
 	cost_SSD = cal_cost(cost_mb_SSD, get_size_vm)
 	cost_HDD = cal_cost(cost_mb_HDD, get_size_vm)
 
-	if storage_vm[2] == 'SSD':
+	if storage_vm[1] == 'SSD':
 		point_storage = { 	"SSD" : [latency_vm, iops_vm, cost_SSD],
 							"HDD" : [latency_hdd, iops_hdd, cost_HDD] }
 	else:
