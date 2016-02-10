@@ -7,16 +7,16 @@ probe begin { printf("starting probe\n") }
 probe vfs.read.return {
   count = $return
   if ( count >= 0 ) {
-    reads[execname()] <<< count # statistics array
-    totals[execname()] += count
+    reads[pid()] <<< count # statistics array
+    totals[pid()] += count
   }
 }
 
 probe vfs.write.return {
   count = $return
   if (count >= 0 ) {
-    writes[execname()] <<< count # statistics array
-    totals[execname()] += count
+    writes[pid()] <<< count # statistics array
+    totals[pid()] += count
   }
 }
 
@@ -28,7 +28,7 @@ probe end {
     "name", "read", "KB tot", "B avg", "write", "KB tot", "B avg")
   */
   foreach (name in totals- limit 20) { # sort by total io
-    printf("{\"name\":\"%16s\", \"read\":%8d, \"read_total\":%8d, \"read_avg\":%8d, \"write\":%8d, \"write_total\":%8d, \"write_avg\":%8d},\n",
+    printf("{\"name\":\"%d\", \"read\":%8d, \"read_total\":%8d, \"read_avg\":%8d, \"write\":%8d, \"write_total\":%8d, \"write_avg\":%8d},\n",
       name,
       @count(reads[name]),
       (@count(reads[name]) ? @sum(reads[name])>>10 : 0 ),
