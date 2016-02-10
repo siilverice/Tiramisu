@@ -11,9 +11,10 @@ if __name__ == "__main__":
 
 	c = conn.cursor()
 
-	arg 		= sys.argv
-	name 		= arg[1]
-	id_owner	= arg[2]
+	arg 			= sys.argv
+	name 			= arg[1]
+	name_display	= arg[2]
+	id_owner		= arg[3]
 
 	command = "cp ../image/HDD/default ../image/HDD/" + name
 	print(command)
@@ -52,7 +53,7 @@ if __name__ == "__main__":
 
 	print "Default username : centos7\nDefault password : root"
 
-	c.execute("insert into tiramisu_vm (owner,name,ip,status,size,cost) values (%s,%s,%s,1,8589.93,429.49)", (id_owner,name,ip,))
+	c.execute("insert into tiramisu_vm (owner,name,ip,status,size,cost,name_display) values (%s,%s,%s,1,8589.93,429.49,%s)", (id_owner,name,ip,name_display,))
 	c.execute("insert into tiramisu_storage (vm_name,current_pool,appropiate_pool,notice) values (%s,'HDD','HDD',1)", (name,))
 	conn.commit()
 	c.close()
