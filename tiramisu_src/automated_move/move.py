@@ -13,6 +13,9 @@ c = conn.cursor()
 arg = sys.argv
 name = arg[1]
 
+cost_mb_SSD = 0.090
+cost_mb_HDD = 0.050
+
 c.execute("select status from tiramisu_vm where name=%s", (name,))
 status = c.fetchone()
 if status[0] == 1:
@@ -59,7 +62,14 @@ command = "sudo virsh start " + name
 print(command)
 os.system(command)
 
-c.execute("update tiramisu_vm set status=1 where name=%s",(name,))
-c.execute("update tiramisu_storage set current_pool=%s,notice=0 where vm_name=%s",(new_pool,name,))
+c.execute("select size from tiramisu_vm where name=%s", (name,))
+size = c.fetchone()
+if new_pool=='HDD':
+    cost = size * cost_mb_HDD
+else:
+    cost = size * cost_mb_SSD
+
+c.execute("update tiramisu_vm set status=1,cost=%s where name=%s",(cost,name,))
+c.execute("update tiramisu_storage set current_pool=%s where vm_name=%s",(new_pool,name,))
 conn.commit()
 c.close()
