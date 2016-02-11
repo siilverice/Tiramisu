@@ -73,6 +73,15 @@ if new_pool=='HDD':
 else:
     cost = float(size[0]) * cost_mb_SSD
 
+while True:
+    p = subprocess.Popen(['sudo', './../init_vm/kvm_findip', name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ip, err = p.communicate()
+    if ip != "":
+        print "########## Start complete ##########"
+        print "Your IP : "
+        print(ip)
+        break
+
 c.execute("update tiramisu_vm set status=1,cost=%s where name=%s",(cost,name,))
 c.execute("update tiramisu_storage set current_pool=%s where vm_name=%s",(new_pool,name,))
 conn.commit()
