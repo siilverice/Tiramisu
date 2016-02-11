@@ -21,7 +21,7 @@ if status[0] == 1:
 	print(command)
 	print "########## shutting down ##########"
 	while True:
-		p = subprocess.Popen(['sudo', './check_shutdown_vm', name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		p = subprocess.Popen(['sudo', './automated_move/check_shutdown_vm', name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		status, err = p.communicate()
 		if status == "shut":
 			print "########## shut down complete ##########"
@@ -42,10 +42,10 @@ os.system(command)
 c.execute("select * from tiramisu_storage where vm_name=%s",(name,))
 data = c.fetchone()
 old_pool = data[1]
-command = "sudo rm -f ../image/" + old_pool + "/" + name
+command = "sudo rm -f image/" + old_pool + "/" + name
 print(command)
 os.system(command)
 
-command = "sudo rm -f ../config/" + name + ".xml"
+command = "sudo rm -f image/config/" + name + ".xml"
 print(command)
 os.system(command)
