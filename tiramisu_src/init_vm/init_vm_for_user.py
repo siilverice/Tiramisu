@@ -53,6 +53,10 @@ if __name__ == "__main__":
 
 	print "Default username : centos7\nDefault password : root"
 
+	command = "./config_staic_ip " + ip
+	print(command)
+	os.system(command)
+
 	c.execute("insert into tiramisu_vm (owner,name,ip,status,size,cost,name_display) values (%s,%s,%s,1,8589.93,429.49,%s)", (id_owner,name,ip,name_display,))
 	c.execute("insert into tiramisu_storage (vm_name,current_pool,appropiate_pool,notice) values (%s,'HDD','HDD',1)", (name,))
 	conn.commit()
