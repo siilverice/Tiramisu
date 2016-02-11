@@ -2,6 +2,7 @@ import os
 import subprocess
 import psycopg2
 import sys
+import time
 
 if __name__ == "__main__":
 	try:
@@ -53,6 +54,7 @@ if __name__ == "__main__":
 
 	print "Default username : centos7\nDefault password : root"
 
+	time.sleep(20)
 	command = "./config_staic_ip " + ip
 	print(command)
 	os.system(command)
