@@ -1,7 +1,0 @@
----
-- hosts: dell4
-
-  remote_user: ceph
-
-  roles:
-    - { role: osd_SSD }

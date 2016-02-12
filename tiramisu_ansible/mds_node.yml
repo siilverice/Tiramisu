@@ -1,6 +1,0 @@
----
-- hosts: hp2
-
-  roles:
-     - { role: mds }
-     - { role: cephfs }

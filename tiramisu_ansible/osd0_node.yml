@@ -1,8 +1,0 @@
----
-- hosts: hp7
-
-  remote_user: ceph
-
-  roles:
-    - { role: osd }
-

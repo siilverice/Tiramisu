@@ -1,7 +1,0 @@
----
-- hosts: test
-
-  remote_user: ceph
-
-  roles:
-    - { role: mon }
