@@ -1,0 +1,153 @@
+{% extends "starter.html" %}
+
+{% block content %}
+
+
+<section class="content-header">
+	<h1>
+		Manage {{current_name}}
+		<small>VM id: {{id_vm}}</small>
+	</h1>
+	
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<br>
+		<input type="hidden" name="name" value={{id_vm}}>
+		<div class="box box-solid box-default">
+			<div class="box-header"><h4>Latency</h4></div>
+			<div class="box-body">
+				<div class="col-md-4">
+					<input type="number" name="latency" value="{{req.latency}}" class="form-control" placeholder="Latency">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="latency_max" value="{{req.latency_max}}" class="form-control" placeholder="Max Latency">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="percentl" value="{{req.percentl}}" class="form-control" placeholder="Percentage error">
+				</div>
+			</div>
+		</div>
+		<div class="box box-solid box-default">
+			<div class="box-header"><h4>IOPS</h4></div>
+			<div class="box-body">
+				<div class="col-md-4">
+					<input type="number" name="iops_min" value="{{req.iops_min}}" class="form-control" placeholder="Min IOPS">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="iops" value="{{req.iops}}" class="form-control" placeholder="IOPS">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="percenti" value="{{req.percenti}}" class="form-control" placeholder="Percentage error">
+				</div>
+			</div>
+		</div>
+		<div class="box box-solid box-default">
+			<div class="box-header"><h4>Cost</h4></div>
+			<div class="box-body">
+				<div class="col-md-4">
+					<input type="number" name="cost" value="{{req.cost}}" class="form-control" placeholder="Cost">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="cost_max" value="{{req.cost_max}}" class="form-control" placeholder="Max Cost">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="percentc" value="{{req.percentc}}" class="form-control" placeholder="Percentage error">
+				</div>
+			</div>
+		</div>
+		<div class="box box-solid box-default">
+		<div class="box-header"><h4>Application type</h4></div>
+			<div class="box-body">
+				<div class="radio">
+					<label>
+						{% if web %}
+							<input type="radio" name="type" id="web" value="1" checked>
+						{% else %}
+							<input type="radio" name="type" id="web" value="1">
+						{% endif %}
+						Website
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						{% if db %}
+							<input type="radio" name="type" id="db" value="2" checked>
+						{% else %}
+							<input type="radio" name="type" id="db" value="2">
+						{% endif %}
+						Database (Write a lot of data)
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						{% if bj %}
+							<input type="radio" name="type" id="bj" value="3" checked>
+						{% else %}
+							<input type="radio" name="type" id="bj" value="3">
+						{% endif %}
+						Batch job
+					</label>
+				</div>
+
+			</div>
+		</div>
+
+	<br>
+	<div class="info-box bg-green">
+		<span class="info-box-icon"><i class="fa fa-hdd-o"></i></span>
+		<div class="info-box-content">
+
+		{% if not change %}
+			<span class="info-box-text"><h3>Suggest your current storage.</h3></span>
+		{% else %}
+			<span class="info-box-text"><h3>{{ appropiate_pool }}</h3></span>
+			<div class="col-md-2">
+				<p>Latency</p>
+			</div>
+			<div class="col-md-10">
+				<p class="info-box-number">{{ appropiate_latency }} ms</p>
+			</div>
+			<div class="col-md-2">
+				<p>IOPS</p>
+			</div>
+			<div class="col-md-10">
+				<p class="info-box-number">{{ appropiate_iops }}</p>
+			</div>
+			<div class="col-md-2">
+				<p>Cost</p>
+			</div>
+			<div class="col-md-10">
+				<p class="info-box-number">{{ cost }} THB</p>
+			</div>
+			<div class="row">
+				<div class="col-md-1">
+					<a href="../move/?id={{id_vm}}"><button type="button" class="btn btn-primary">Accept</button></a>
+				</div>
+		{% endif %}
+				<form action="/tiramisu/cancel/" method="POST">
+				{% csrf_token %}
+					<input type="hidden" name="name" value={{ id_vm }}>
+					<input type="hidden" name="latency" value={{ req_old.latency }}>
+					<input type="hidden" name="latency_max" value={{ req_old.latency_max }}>
+					<input type="hidden" name="percentl" value={{ req_old.percentl }}>
+					<input type="hidden" name="iops_min" value={{ req_old.iops_min }}>
+					<input type="hidden" name="iops" value={{ req_old.iops }}>
+					<input type="hidden" name="percenti" value={{ req_old.percenti }}>
+					<input type="hidden" name="cost" value={{ req_old.cost }}>
+					<input type="hidden" name="cost_max" value={{ req_old.cost_max }}>
+					<input type="hidden" name="percentc" value={{ req_old.percentc }}>
+					<input type="hidden" name="type" value={{ req_old.app_type }}>
+					<div class="col-md-2">
+						<button type="submit" class="btn btn-danger">Cancel</button>
+					</div>
+				</form>
+			</div>
+		</div><!-- /.info-box-content -->
+	</div>
+	
+</section>
+
+
+{% endblock %}

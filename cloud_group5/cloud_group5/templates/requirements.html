@@ -1,0 +1,108 @@
+{% extends "starter.html" %}
+
+{% block content %}
+
+
+<section class="content-header">
+	<h1>
+		Manage {{current_name}}
+		<small>VM id: {{id_vm}}</small>
+	</h1>
+	
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<br>
+	<form action="/tiramisu/requirements/" method="POST">
+	{% csrf_token %}
+		<input type="hidden" name="name" value={{id_vm}}>
+		<div class="box box-solid box-default">
+			<div class="box-header"><h4>Latency</h4></div>
+			<div class="box-body">
+				<div class="col-md-4">
+					<input type="number" name="latency" value="{{req.latency}}" class="form-control" placeholder="Latency">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="latency_max" value="{{req.latency_max}}" class="form-control" placeholder="Max Latency">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="percentl" value="{{req.percentl}}" class="form-control" placeholder="Percentage error">
+				</div>
+			</div>
+		</div>
+		<div class="box box-solid box-default">
+			<div class="box-header"><h4>IOPS</h4></div>
+			<div class="box-body">
+				<div class="col-md-4">
+					<input type="number" name="iops_min" value="{{req.iops_min}}" class="form-control" placeholder="Min IOPS">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="iops" value="{{req.iops}}" class="form-control" placeholder="IOPS">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="percenti" value="{{req.percenti}}" class="form-control" placeholder="Percentage error">
+				</div>
+			</div>
+		</div>
+		<div class="box box-solid box-default">
+			<div class="box-header"><h4>Cost</h4></div>
+			<div class="box-body">
+				<div class="col-md-4">
+					<input type="number" name="cost" value="{{req.cost}}" class="form-control" placeholder="Cost">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="cost_max" value="{{req.cost_max}}" class="form-control" placeholder="Max Cost">
+				</div>
+				<div class="col-md-4">
+					<input type="number" name="percentc" value="{{req.percentc}}" class="form-control" placeholder="Percentage error">
+				</div>
+			</div>
+		</div>
+		<div class="box box-solid box-default">
+		<div class="box-header"><h4>Application type</h4></div>
+			<div class="box-body">
+				<div class="radio">
+					<label>
+						{% if web %}
+							<input type="radio" name="type" id="web" value="1" checked>
+						{% else %}
+							<input type="radio" name="type" id="web" value="1">
+						{% endif %}
+						Website
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						{% if db %}
+							<input type="radio" name="type" id="db" value="2" checked>
+						{% else %}
+							<input type="radio" name="type" id="db" value="2">
+						{% endif %}
+						Database (Write a lot of data)
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						{% if bj %}
+							<input type="radio" name="type" id="bj" value="3" checked>
+						{% else %}
+							<input type="radio" name="type" id="bj" value="3">
+						{% endif %}
+						Batch job
+					</label>
+				</div>
+
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-10"></div>
+			<button type="submit" class="btn btn-primary">Apply</button>
+	</form>
+	<a href=""><button type="button" class="btn btn-danger">Reset</button></a>
+	</div>
+	
+</section>
+
+
+{% endblock %}
